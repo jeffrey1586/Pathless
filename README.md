@@ -1,4 +1,4 @@
-# FinalProject - Pathless
+# Programmeerproject - Pathless
 
 Name: Jeffrey Chong</br>
 Student nmr.: 11304669</br>
