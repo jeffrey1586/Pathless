@@ -16,7 +16,7 @@ Hiermee maken de gebruikers een visueel archief aan die laat zien welke onverget
 
 ### Visual sketch.
 In het bestand 'docs' is de visual sketch van de Pathless app opgeslagen in een PNG bestand.</br>
-Hierin zijn drie activities te zijn die in ieder geval in de app komen te staan.</br>
+Hierin zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
 ### Benodigdheden.
