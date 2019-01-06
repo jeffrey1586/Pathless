@@ -12,16 +12,18 @@ het ontmoeten van de lokale bevolking en het leren van nieuwe culturen wordt bij
 In de Pathless app kunnen reizigers tijdens de reis hun favorieten locaties toevoegen aan de map.</br>
 Vervolgens kunnen zij foto's en een aantal regels tekst bijvoegen die voor hun een verhaal verteld over die plek</br>
 of simpelweg laat zien hoe mooi die plek is.</br>
-Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.</br>
+Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.
+</br>
 
 ### Visual sketch.
 Hieronder zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
 ![Screenschot](doc/VisualSketch.png)
+</br>
 
 ### Benodigdheden.
-- Google maps activity (homescreen):</br>
+- Google maps activity (homescreen):
   Hierin is het in ieder geval belangrijk dat de vlaggen mee veranderen qua grootte als er in- of uitgezoomd wordt in de map.</br>
   Daarnaast moet er een nieuwe vlag toegevoegd worden op de map als de gebruiker een nieuwe locatie heeft toegevoegd.
   
