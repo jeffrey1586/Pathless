@@ -15,8 +15,7 @@ of simpelweg laat zien hoe mooi die plek is.</br>
 Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.</br>
 
 ### Visual sketch.
-In het bestand 'docs' is de visual sketch van de Pathless app opgeslagen in een PNG bestand.</br>
-Hierin zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
+Hieronder zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
 ![Screenschot](doc/VisualSketch.png)
