@@ -19,7 +19,7 @@ In het bestand 'docs' is de visual sketch van de Pathless app opgeslagen in een 
 Hierin zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
-![Screenschot].(doc/VisualSketch.png)
+![Screenschot](doc/VisualSketch.png)
 
 ### Benodigdheden.
 - Google maps activity (homescreen):</br>
