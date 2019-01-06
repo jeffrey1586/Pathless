@@ -35,7 +35,7 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
 
 - Add location:</br>
   Er zijn in dit concept twee opties om een locatie toe tevoegen.</br>
-  Afhankelijk van de moeilijkheid wordt 1 van de twee gekozen.</br>
+  Afhankelijk van de moeilijkheid wordt 1 van de twee geïmplementeerd.</br>
 
   De eerste optie is een textbox in 'the inputscreen' waarbij de gebruiker zelf de locatie typt en ondertussen worden er suggesties
   laten zien. De gebruiker kan dan èèn van de suggesties kiezen. Dit concept is te zien in de visual sketch.</br>
