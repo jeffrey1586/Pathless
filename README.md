@@ -13,6 +13,7 @@ In de Pathless app kunnen reizigers tijdens de reis hun favorieten locaties toev
 Vervolgens kunnen zij foto's en een aantal regels tekst bijvoegen die voor hun een verhaal verteld over die plek</br>
 of simpelweg laat zien hoe mooi die plek is.</br>
 Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.
+
 </br>
 
 ### Visual sketch.
@@ -20,6 +21,7 @@ Hieronder zijn drie activities te zien die in ieder geval in de app komen te sta
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
 ![Screenschot](doc/VisualSketch.png)
+
 </br>
 
 ### Benodigdheden.
