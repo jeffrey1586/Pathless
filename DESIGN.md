@@ -8,3 +8,4 @@ De achterliggende connecties tussen de activities en functionaliteiten zijn hier
 | col 3 is      | coordinates    |
 | col 2 is      | pictures       |   
 | zebra stripes | description    | 
+
