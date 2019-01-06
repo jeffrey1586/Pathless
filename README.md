@@ -21,10 +21,11 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
 
 ### Benodigdheden.
 - Google maps activity (homescreen):</br>
-  Hierin is het belangrijk dat de flaggen mee veranderen qua grootte als er in- of uitgezoomd wordt in de map.
-
+  Hierin is het in ieder geval belangrijk dat de vlaggen mee veranderen qua grootte als er in- of uitgezoomd wordt in de map.</br>
+  Daarnaast moet er een nieuwe vlag toegevoegd worden op de map als de gebruiker een nieuwe locatie heeft toegevoegd.
+  
 - Swipable pictures:</br>
-  Er moet op de foto's die te zien zijn in 'the detailscreen' geswiped kunnen worden. Daarmee kunnen de gebruikers alle foto's bekijken.
+  Er moet op de foto's, die te zien zijn in 'the detailscreen', geswiped kunnen worden. Daarmee kunnen de gebruikers alle foto's bekijken.
   De drie bolletjes onder de foto geven aan of je bij de eerste foto (alleen eerste bolletje wit), de laatste foto (alleen laatste
   bolletje wit) of op een foto ergens daartussen bent (alleen middelste booletje wit).</br>
 
