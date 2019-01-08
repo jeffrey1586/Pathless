@@ -11,4 +11,4 @@ De achterliggende connecties tussen de activities en functionaliteiten zijn hier
 
 ### API, Classes.
 - Google maps API (homescreen)
-- ViewPager Class, to slide through pictures (detailscreen)
+- ViewPager Class voor de swipe functionaliteit van de foto's (detailscreen)
