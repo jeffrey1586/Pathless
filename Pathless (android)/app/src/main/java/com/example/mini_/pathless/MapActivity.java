@@ -1,14 +1,21 @@
 package com.example.mini_.pathless;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Map;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -22,8 +29,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+        // setting click listener on the floating action button
+        FloatingActionButton newContent = findViewById(R.id.newEntry_button);
+        newContent.setOnClickListener(new newEntryButtonClick());
+    }
 
     /**
      * Manipulates the map once available.
@@ -38,9 +48,41 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Add the markers that are made
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney"));
+        LatLng usa = new LatLng(34, 251);
+        mMap.addMarker(new MarkerOptions().position(usa).title("USA"));
+
+        // set click listener on the markers
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker m) {
+                LatLng position = m.getPosition();
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+                m.showInfoWindow();
+                return true;
+            }
+        });
+
+        // set click listener on the info window
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker m) {
+                if (m.isInfoWindowShown()) {
+                    Intent intent = new Intent(MapActivity.this, DetailActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    // the click listener to make new location
+    private class newEntryButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MapActivity.this, InputActivity.class);
+            startActivity(intent);
+        }
     }
 }

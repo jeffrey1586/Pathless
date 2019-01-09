@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "111374043209",
+    "firebase_url": "https://pathless-android.firebaseio.com",
+    "project_id": "pathless-android",
+    "storage_bucket": "pathless-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111374043209:android:2ccb646b45b4083c",
+        "android_client_info": {
+          "package_name": "com.example.mini_.pathless"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111374043209-heus82nvsel9m0bh5ece291nvk6e73m4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mini_.pathless",
+            "certificate_hash": "c94145bfa5c931ade898e4a50e98a3afc573aa9e"
+          }
+        },
+        {
+          "client_id": "111374043209-08jmdpt9vrk0bt1cqsldksttj3qbg7gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUQIcgbJLg4xowqvieX46IGZLRnse3SvY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111374043209-08jmdpt9vrk0bt1cqsldksttj3qbg7gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
