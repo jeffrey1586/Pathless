@@ -38,8 +38,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".InputActivity"></activity>
+        <activity android:name=".DetailActivity"
+            android:parentActivityName=".MapActivity"/>
+        <activity android:name=".InputActivity"
+            android:parentActivityName=".MapActivity"/>
     </application>
 
 </manifest>
