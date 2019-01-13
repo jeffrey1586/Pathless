@@ -1,7 +1,8 @@
 # Day 3
 ### Geïmplementeerd/toegevoegd:
+- De drie activities met de bijbehorende xml bestanden.
 - De basis google maps api.
-- De drie activities met de bijbehorende xml bestanden.</br>
+</br>
 ![Screenshot](doc/map_week_1.jpeg)
 
 ### Veranderingen og toevoegingen in het plan:
