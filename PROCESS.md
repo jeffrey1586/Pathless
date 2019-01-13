@@ -1,8 +1,7 @@
 # Day 3
 ### Geïmplementeerd/toegevoegd:
 - De drie activities met de bijbehorende xml bestanden.
-- De basis google maps api.
-</br>
+- De basis google maps api.</br>
 ![Screenshot](doc/map_week_1.jpeg)
 
 ### Veranderingen og toevoegingen in het plan:
@@ -17,7 +16,7 @@
 ![Screenshot](doc/marker_week_1.jpeg)
 ![Screenshot](doc/detail_week_1.jpeg)
 ![Screenshot](doc/input_week_1.jpeg)
-![Screenshot](doc/fire base)
+![Screenshot](doc/fire base)+
 
 ### Veranderingen of toevoegingen in het plan:
 - Bitmap omzetten in String en die String opslaan in de database (nog zoekende naar betere manier).</br>
