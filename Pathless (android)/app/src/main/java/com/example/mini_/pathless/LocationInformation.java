@@ -1,17 +1,10 @@
 package com.example.mini_.pathless;
 
-public class Post {
+public class LocationInformation {
     private String location, description, bitmap;
-//    private float location;
 
-    public Post() {
+    public LocationInformation(){
 
-    }
-
-    public Post(String location, String description, String bitmap) {
-        this.location = location;
-        this.description = description;
-        this.bitmap = bitmap;
     }
 
     public String getLocation() {
@@ -22,19 +15,19 @@ public class Post {
         this.location = location;
     }
 
-    public String getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(String bitmap) {
-        this.bitmap = bitmap;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap;
     }
 }

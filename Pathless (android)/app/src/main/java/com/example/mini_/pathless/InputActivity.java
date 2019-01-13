@@ -104,7 +104,7 @@ public class InputActivity extends AppCompatActivity {
 
         // push location, description and pictures to Firebase
         databaseReference = databaseReference.child(location);
-        Post post = new Post(description, biteString, location);
+        Post post = new Post(location, description, biteString);
         databaseReference.setValue(post);
     }
 }
