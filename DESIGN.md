@@ -3,11 +3,11 @@ De volgende sketch geeft de uitgebreide UI weer van de Pathless app.</br>
 De achterliggende connecties tussen de activities en functionaliteiten zijn hier weergegeven.</br>
 ![Screenshot](doc/DesignDoc.png)
 
-| Class LocationEntry | EntryDatabase (SQLite) |
-| ------------------- | ---------------------  |
-| coordinates         | float,float            |
-| pictures            | Bitmap                 |
-| description         | text                   |
+| Class LocationEntry | Realtime Database (Firebase) |
+| ------------------- | ---------------------------  |
+| coordinates         | float,float                  |
+| pictures            | Bitmap                       |
+| description         | text                         |
 
 ### API, Classes.
 - Google maps API (homescreen)
