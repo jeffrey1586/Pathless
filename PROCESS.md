@@ -6,7 +6,7 @@
 
 ### Veranderingen og toevoegingen in het plan:
 - Gekozen voor firebase (database) ipv SQL.</br>
-![Screenshot](doc/design doc)
+![Screenshot](doc/DesignDoc3.png)
 
 # Day 4
 ### Geïmplementeerd/toegevoegd:
@@ -20,11 +20,11 @@
 
 ### Veranderingen of toevoegingen in het plan:
 - Bitmap omzetten in String en die String opslaan in de database (nog zoekende naar betere manier).</br>
-![Screenshot](doc/design doc)</br>
+![Screenshot](doc/DesignDoc4.png)
 
 # Day 5
 ### Geïmplementeerd/toegevoegd:
 - Het lezen van de informatie (onder de gekozen locatie) uit de Firebase database. En dit laten zien in de DetailActivity.
 - LocationInformation.java class.</br>
 ![Screenshot](doc/database_week_1.jpeg)
-![Screenshot](doc/design doc)
+![Screenshot](doc/DesignDoc5.png)
