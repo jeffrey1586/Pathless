@@ -2,7 +2,7 @@
 ### Geïmplementeerd/toegevoegd:
 - De basis google maps api.
 - De drie activities met de bijbehorende xml bestanden.</br>
-![Screenshot](doc/google maps)
+![Screenshot](doc/map_week_1.jpeg)
 
 ### Veranderingen og toevoegingen in het plan:
 - Gekozen voor firebase (database) ipv SQL.</br>
@@ -13,6 +13,9 @@
 - Connectiviteit tussen de 3 activities.
 - Schrijven van foto's en tekst naar de Firebase database. 
 - Post.java class.</br>
+![Screenshot](doc/marker_week_1.jpeg)
+![Screenshot](doc/detail_week_1.jpeg)
+![Screenshot](doc/input_week_1.jpeg)
 ![Screenshot](doc/fire base)
 
 ### Veranderingen of toevoegingen in het plan:
