@@ -26,4 +26,5 @@
 ### Geïmplementeerd/toegevoegd:
 - Het lezen van de informatie (onder de gekozen locatie) uit de Firebase database. En dit laten zien in de DetailActivity.
 - LocationInformation.java class.</br>
-![Screenshot](doc/design doc)</br>
+![Screenshot](doc/database_week_1.jpeg)
+![Screenshot](doc/design doc)
