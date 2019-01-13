@@ -24,7 +24,9 @@
 
 # Day 5
 ### Geïmplementeerd/toegevoegd:
-- Het lezen van de informatie (onder de gekozen locatie) uit de Firebase database. En dit laten zien in de DetailActivity.
-- LocationInformation.java class.</br>
+- Het lezen van de informatie (onder de gekozen locatie) uit de Firebase database. En dit laten zien in de DetailActivity.</br>
 ![Screenshot](doc/database_week_1.jpeg)
+
+### Veranderingen of toevoegingen in het plan:
+- LocationInformation.java class.</br>
 ![Screenshot](doc/DesignDoc5.png)
