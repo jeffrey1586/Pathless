@@ -10,13 +10,13 @@
 
 # Day 4
 ### Geïmplementeerd/toegevoegd:
-- Connectiviteit tussen de 3 activities.
 - Schrijven van foto's en tekst naar de Firebase database. 
-- Post.java class.</br>
+- Post.java class.
+- Connectiviteit tussen de 3 activities.</br>
 ![Screenshot](doc/marker_week_1.jpeg)
 ![Screenshot](doc/detail_week_1.jpeg)
 ![Screenshot](doc/input_week_1.jpeg)
-![Screenshot](doc/fire base)+
+![Screenshot](doc/firebase_home.jpeg)
 
 ### Veranderingen of toevoegingen in het plan:
 - Bitmap omzetten in String en die String opslaan in de database (nog zoekende naar betere manier).</br>
