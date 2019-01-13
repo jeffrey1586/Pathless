@@ -34,9 +34,13 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
   De drie bolletjes onder de foto geven aan of je bij de eerste foto (alleen eerste bolletje wit), de laatste foto (alleen laatste
   bolletje wit) of op een foto ergens daartussen bent (alleen middelste booletje wit).</br>
 
-- Add pictures (pop up, SQL):</br>
+- Add pictures (pop up):</br>
   In 'the inputscreen' moet het mogelijk zijn om foto's toe te voegen die uit de galerij van de gebruiker komt.</br>
-  Als er een foto gekozen wordt moet dit samen met de loactie gegevens en tekst opgeslagen worden in een database (SQL).</br>
+  Als er een foto gekozen wordt moet dit samen met de loactie gegevens en tekst opgeslagen worden in een database.</br>
+
+- Firebase Database:</br>
+  In de Pathless app wordt er gebruik gemaakt van de realtime database van Firebase.</br>
+  De foto's woren als String opgeslagen in deze database.</br>
 
 - Add location:</br>
   Er zijn in dit concept twee opties om een locatie toe tevoegen.</br>
