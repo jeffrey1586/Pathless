@@ -1,17 +1,24 @@
 package com.example.mini_.pathless;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Post {
-    private String location, description, bitmap;
-//    private float location;
+    private String location, description;
+    private ArrayList <String> images;
 
     public Post() {
 
     }
 
-    public Post(String location, String description, String bitmap) {
+    public Post(String location, ArrayList <String> images, String description) {
         this.location = location;
+        this.images = images;
         this.description = description;
-        this.bitmap = bitmap;
+
     }
 
     public String getLocation() {
@@ -22,12 +29,12 @@ public class Post {
         this.location = location;
     }
 
-    public String getBitmap() {
-        return bitmap;
+    public ArrayList <String> getImages() {
+        return images;
     }
 
-    public void setBitmap(String bitmap) {
-        this.bitmap = bitmap;
+    public void setImages(ArrayList <String> images) {
+        this.images = images;
     }
 
     public String getDescription() {

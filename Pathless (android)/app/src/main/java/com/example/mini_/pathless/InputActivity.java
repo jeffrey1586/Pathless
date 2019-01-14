@@ -1,11 +1,13 @@
 package com.example.mini_.pathless;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -14,13 +16,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class InputActivity extends AppCompatActivity {
 
@@ -28,8 +41,15 @@ public class InputActivity extends AppCompatActivity {
     TextView locationInput;
     ImageView imageview;
     Bitmap bitmap;
+    Uri selectedImage;
+    String user;
+    FirebaseAuth mAuth;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    ArrayList<String> images = new ArrayList();
+    ArrayList<Uri> listUris = new ArrayList();
     private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
@@ -37,9 +57,13 @@ public class InputActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
 
-        // setup the Firebase path
+        // setup Firebase userId, storage and database
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser().getUid();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("LOCATION_ENTRY");
+        databaseReference = firebaseDatabase.getReference(user);
 
         // connecting the add button to a click listener
         Button addButton = findViewById(R.id.add_button);
@@ -64,13 +88,16 @@ public class InputActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // set image that is selected from the gallery
+        // show image that is selected from the gallery and add to array
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
+            selectedImage = data.getData();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                 imageview = findViewById(R.id.image_selected);
                 imageview.setImageBitmap(bitmap);
+                listUris.add(selectedImage);
+                images.add(bitmap.toString());
+                System.out.println("shout" + listUris);
             } catch (IOException e){
                 e.printStackTrace();
             }
@@ -96,15 +123,20 @@ public class InputActivity extends AppCompatActivity {
         String description = descriptionInput.getText().toString();
         String location = locationInput.getText().toString();
 
-        // convert bitmap to string
-        ByteArrayOutputStream biteStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, biteStream);
-        byte[] b = biteStream.toByteArray();
-        String biteString = Base64.encodeToString(b, Base64.DEFAULT);
+        // add images to storage Firebase
+        if(selectedImage != null) {
+            for (int i = 0; i < listUris.size(); i++){
+                Uri uri = listUris.get(i);
+                String bitmap = images.get(i);
+                StorageReference ref = storageReference.child("images/" + bitmap);
+                ref.putFile(uri);
+            }
+        }
 
-        // push location, description and pictures to Firebase
+        // push location, description and pictures (in array) to Firebase
         databaseReference = databaseReference.child(location);
-        Post post = new Post(location, description, biteString);
+        Post post = new Post(location, images, description);
         databaseReference.setValue(post);
     }
 }
+// authentication (UI), storage met link in database

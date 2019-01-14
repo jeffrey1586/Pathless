@@ -3,6 +3,7 @@ package com.example.mini_.pathless;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,16 +11,31 @@ import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.module.AppGlideModule;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
+    MyAppGlideModule GlideApp;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    String user;
+    String images;
+    Uri uri;
+    FirebaseAuth mAuth;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     String location;
     ImageView pictureFrame;
     TextView locDescription;
@@ -29,12 +45,19 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        // getting the clicked location
         Intent intent = getIntent();
         location = intent.getStringExtra("location");
 
+        // setting up the Firedatabase authentication, storage and database
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser().getUid();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        databaseReference = firebaseDatabase.getReference(user);
 
+        // the event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -48,18 +71,26 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    // getting the specific location's data from the database
     private void showData(DataSnapshot dataSnapshot) {
         for (DataSnapshot ds : dataSnapshot.getChildren()){
             LocationInformation locInfo = new LocationInformation();
             locInfo.setLocation(ds.child(location).getValue(LocationInformation.class).getLocation());
             locInfo.setDescription(ds.child(location).getValue(LocationInformation.class).getDescription());
-            locInfo.setBitmap(ds.child(location).getValue(LocationInformation.class).getBitmap());
+            locInfo.setImages(ds.child(location).getValue(LocationInformation.class).getImages());
 
+            // ImageView in your Activity
             pictureFrame = findViewById(R.id.imageSlider);
-            byte[] encodeByte = Base64.decode(locInfo.getBitmap(), Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
-                    encodeByte.length);
-            pictureFrame.setImageBitmap(bitmap);
+            images = locInfo.getImages();
+
+            // Download directly from StorageReference using Glide
+            Glide.with(this).load(uri).into(pictureFrame);
+
+//            pictureFrame = findViewById(R.id.imageSlider);
+//            byte[] encodeByte = Base64.decode(locInfo.getImages(), Base64.DEFAULT);
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
+//                    encodeByte.length);
+//            pictureFrame.setImageBitmap(bitmap);
 
             locDescription = findViewById(R.id.location_text);
             locDescription.setText(locInfo.getDescription());

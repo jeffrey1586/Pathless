@@ -1,7 +1,7 @@
 package com.example.mini_.pathless;
 
 public class LocationInformation {
-    private String location, description, bitmap;
+    private String location, images, description;
 
     public LocationInformation(){
 
@@ -23,11 +23,11 @@ public class LocationInformation {
         this.description = description;
     }
 
-    public String getBitmap() {
-        return bitmap;
+    public String getImages() {
+        return images;
     }
 
-    public void setBitmap(String bitmap) {
-        this.bitmap = bitmap;
+    public void setImages(String images) {
+        this.images = images;
     }
 }
