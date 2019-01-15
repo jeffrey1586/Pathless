@@ -40,3 +40,7 @@
 ### Veranderingen of toevoegingen in het plan:
 - userID
 - Storage firebase
+
+# Day 7
+### Veranderingen of toevoegingen in het plan:
+- foto's opslaan met een url link
