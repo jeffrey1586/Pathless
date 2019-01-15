@@ -1,7 +1,10 @@
 package com.example.mini_.pathless;
 
+import java.util.ArrayList;
+
 public class LocationInformation {
-    private String location, images, description;
+    private String location, description;
+    private ArrayList<String> images = new ArrayList();
 
     public LocationInformation(){
 
@@ -23,11 +26,11 @@ public class LocationInformation {
         this.description = description;
     }
 
-    public String getImages() {
+    public ArrayList<String> getImages() {
         return images;
     }
 
-    public void setImages(String images) {
+    public void setImages(ArrayList<String> images) {
         this.images = images;
     }
 }

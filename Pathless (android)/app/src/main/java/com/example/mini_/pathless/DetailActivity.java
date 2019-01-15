@@ -31,7 +31,7 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String user;
-    String images;
+    ArrayList<String> images;
     Uri uri;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(user);
+        databaseReference = firebaseDatabase.getReference();
 
         // the event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -79,19 +79,15 @@ public class DetailActivity extends AppCompatActivity {
             locInfo.setDescription(ds.child(location).getValue(LocationInformation.class).getDescription());
             locInfo.setImages(ds.child(location).getValue(LocationInformation.class).getImages());
 
-            // ImageView in your Activity
+            // Show the images stored for clicked location
             pictureFrame = findViewById(R.id.imageSlider);
             images = locInfo.getImages();
+            for (int i = 0; i < images.size(); i++){
+                String bitmap = images.get(i);
+                Uri downloadURI = storageReference.child(bitmap).getDownloadUrl().getResult();
+            }
 
-            // Download directly from StorageReference using Glide
-            Glide.with(this).load(uri).into(pictureFrame);
-
-//            pictureFrame = findViewById(R.id.imageSlider);
-//            byte[] encodeByte = Base64.decode(locInfo.getImages(), Base64.DEFAULT);
-//            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
-//                    encodeByte.length);
-//            pictureFrame.setImageBitmap(bitmap);
-
+            // Show description of location
             locDescription = findViewById(R.id.location_text);
             locDescription.setText(locInfo.getDescription());
         }

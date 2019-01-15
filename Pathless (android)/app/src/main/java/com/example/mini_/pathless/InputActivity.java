@@ -97,7 +97,6 @@ public class InputActivity extends AppCompatActivity {
                 imageview.setImageBitmap(bitmap);
                 listUris.add(selectedImage);
                 images.add(bitmap.toString());
-                System.out.println("shout" + listUris);
             } catch (IOException e){
                 e.printStackTrace();
             }
@@ -128,7 +127,7 @@ public class InputActivity extends AppCompatActivity {
             for (int i = 0; i < listUris.size(); i++){
                 Uri uri = listUris.get(i);
                 String bitmap = images.get(i);
-                StorageReference ref = storageReference.child("images/" + bitmap);
+                StorageReference ref = storageReference.child("images/" + uri);
                 ref.putFile(uri);
             }
         }
@@ -139,4 +138,3 @@ public class InputActivity extends AppCompatActivity {
         databaseReference.setValue(post);
     }
 }
-// authentication (UI), storage met link in database
