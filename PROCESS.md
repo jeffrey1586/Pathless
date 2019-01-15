@@ -4,7 +4,7 @@
 - De basis google maps api.</br>
 ![Screenshot](doc/map_week_1.jpeg)
 
-### Veranderingen og toevoegingen in het plan:
+### Veranderingen of toevoegingen in het plan:
 - Gekozen voor firebase (database) ipv SQL.</br>
 ![Screenshot](doc/DesignDoc3.png)
 
@@ -30,3 +30,13 @@
 ### Veranderingen of toevoegingen in het plan:
 - LocationInformation.java class.</br>
 ![Screenshot](doc/DesignDoc5.png)
+
+# Day 6
+### Geïmplementeerd/toegevoegd:
+- authentication/userID gefixt
+- opslaan foto's in storage
+- array met korte strings die gelinkt zijn met de foto's in de storage
+
+### Veranderingen of toevoegingen in het plan:
+- userID
+- Storage firebase
