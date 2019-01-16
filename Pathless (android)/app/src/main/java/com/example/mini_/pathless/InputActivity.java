@@ -6,11 +6,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,11 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -31,7 +36,11 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -41,15 +50,18 @@ public class InputActivity extends AppCompatActivity {
     TextView locationInput;
     ImageView imageview;
     Bitmap bitmap;
-    Uri selectedImage;
+    Uri selectedUri;
     String user;
+    String location;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    ArrayList<String> images = new ArrayList();
+    StorageReference ref;
+    String newUri;
     ArrayList<Uri> listUris = new ArrayList();
+    ArrayList<String> urls = new ArrayList();
     private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
@@ -90,13 +102,12 @@ public class InputActivity extends AppCompatActivity {
 
         // show image that is selected from the gallery and add to array
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            selectedImage = data.getData();
+            selectedUri = data.getData();
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedUri);
                 imageview = findViewById(R.id.image_selected);
                 imageview.setImageBitmap(bitmap);
-                listUris.add(selectedImage);
-                images.add(bitmap.toString());
+                listUris.add(selectedUri);
             } catch (IOException e){
                 e.printStackTrace();
             }
@@ -116,25 +127,40 @@ public class InputActivity extends AppCompatActivity {
     // this function pushes the pictures and text to the database
     private void postComment(){
 
-        // get location and description
-        descriptionInput = findViewById(R.id.description_text);
-        locationInput = findViewById(R.id.location_text);
-        String description = descriptionInput.getText().toString();
-        String location = locationInput.getText().toString();
-
         // add images to storage Firebase
-        if(selectedImage != null) {
-            for (int i = 0; i < listUris.size(); i++){
-                Uri uri = listUris.get(i);
-                String bitmap = images.get(i);
-                StorageReference ref = storageReference.child("images/" + uri);
-                ref.putFile(uri);
-            }
+        for (int i = 0; i < listUris.size(); i++) {
+            Uri uri = listUris.get(i);
+            Date currentTime = Calendar.getInstance().getTime();
+            ref = storageReference.child("images/" + currentTime + uri.getLastPathSegment());
+            ref.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            urls.add(task.getResult().toString());
+                            postAll();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void postAll() {
+        // get location and description
+        locationInput = findViewById(R.id.location_text);
+        location = locationInput.getText().toString();
+        descriptionInput = findViewById(R.id.description_text);
+        String description = descriptionInput.getText().toString();
+        if (description.isEmpty()) {
+            description = "empty";
         }
 
         // push location, description and pictures (in array) to Firebase
         databaseReference = databaseReference.child(location);
-        Post post = new Post(location, images, description);
+        Post post = new Post(location, urls, description);
         databaseReference.setValue(post);
     }
+
 }

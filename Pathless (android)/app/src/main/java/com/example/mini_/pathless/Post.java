@@ -8,15 +8,15 @@ import java.util.HashMap;
 
 public class Post {
     private String location, description;
-    private ArrayList <String> images;
+    private ArrayList <String> urls;
 
     public Post() {
 
     }
 
-    public Post(String location, ArrayList <String> images, String description) {
+    public Post(String location, ArrayList <String> urls, String description) {
         this.location = location;
-        this.images = images;
+        this.urls = urls;
         this.description = description;
 
     }
@@ -29,12 +29,12 @@ public class Post {
         this.location = location;
     }
 
-    public ArrayList <String> getImages() {
-        return images;
+    public ArrayList <String> getUrls() {
+        return urls;
     }
 
-    public void setImages(ArrayList <String> images) {
-        this.images = images;
+    public void setUrls(ArrayList <String> urls) {
+        this.urls = urls;
     }
 
     public String getDescription() {

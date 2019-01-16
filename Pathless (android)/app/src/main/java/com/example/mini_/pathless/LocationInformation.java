@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class LocationInformation {
     private String location, description;
-    private ArrayList<String> images = new ArrayList();
+    private ArrayList<String> urls = new ArrayList();
 
     public LocationInformation(){
 
@@ -26,11 +26,11 @@ public class LocationInformation {
         this.description = description;
     }
 
-    public ArrayList<String> getImages() {
-        return images;
+    public ArrayList<String> getUrls() {
+        return urls;
     }
 
-    public void setImages(ArrayList<String> images) {
-        this.images = images;
+    public void setUrls(ArrayList<String> urls) {
+        this.urls = urls;
     }
 }

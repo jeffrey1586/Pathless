@@ -53,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storageReference = storage.getReference("images/");
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
 
@@ -76,20 +76,22 @@ public class DetailActivity extends AppCompatActivity {
         for (DataSnapshot ds : dataSnapshot.getChildren()){
             LocationInformation locInfo = new LocationInformation();
             locInfo.setLocation(ds.child(location).getValue(LocationInformation.class).getLocation());
+            locInfo.setUrls(ds.child(location).getValue(LocationInformation.class).getUrls());
             locInfo.setDescription(ds.child(location).getValue(LocationInformation.class).getDescription());
-            locInfo.setImages(ds.child(location).getValue(LocationInformation.class).getImages());
 
             // Show the images stored for clicked location
             pictureFrame = findViewById(R.id.imageSlider);
-            images = locInfo.getImages();
+            images = locInfo.getUrls();
             for (int i = 0; i < images.size(); i++){
-                String bitmap = images.get(i);
-                Uri downloadURI = storageReference.child(bitmap).getDownloadUrl().getResult();
             }
 
-            // Show description of location
+            // Show description of the location
+            String description = locInfo.getDescription();
+            if (description == "empty"){
+                description = "";
+            }
             locDescription = findViewById(R.id.location_text);
-            locDescription.setText(locInfo.getDescription());
+            locDescription.setText(description);
         }
     }
 }
