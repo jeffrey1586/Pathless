@@ -44,3 +44,9 @@
 # Day 7
 ### Veranderingen of toevoegingen in het plan:
 - foto's opslaan met een url link
+
+# Day 8
+### Geïmplementeerd/toegevoegd:
+- De url's van de images uit storage ophalen en deze in de database als een array voor een locatie opslaan.
+- Een foto van een locatie ophalen uit the storage voor een locatie met glide.
+- (Alpha versie)
