@@ -138,8 +138,11 @@ public class InputActivity extends AppCompatActivity {
                     ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            urls.add(task.getResult().toString());
-                            postAll();
+                            newUri = task.getResult().toString();
+                            urls.add(newUri);
+                            if (urls.size() == listUris.size()){
+                                postAll();
+                            }
                         }
                     });
                 }

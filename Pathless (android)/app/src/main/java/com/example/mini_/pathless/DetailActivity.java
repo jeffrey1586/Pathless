@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     String user;
     ArrayList<String> images;
-    Uri uri;
+    String uri;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -83,6 +83,10 @@ public class DetailActivity extends AppCompatActivity {
             pictureFrame = findViewById(R.id.imageSlider);
             images = locInfo.getUrls();
             for (int i = 0; i < images.size(); i++){
+                uri = images.get(i);
+                Glide.with(this)
+                        .load(uri)
+                        .into(pictureFrame);
             }
 
             // Show description of the location
