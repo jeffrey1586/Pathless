@@ -33,20 +33,29 @@
 
 # Day 6
 ### Geïmplementeerd/toegevoegd:
-- authentication/userID gefixt
-- opslaan foto's in storage
-- array met korte strings die gelinkt zijn met de foto's in de storage
+- Authentication/userID wordt gemaakt per telefoon
+- Opslaan van foto's in storage
 
 ### Veranderingen of toevoegingen in het plan:
-- userID
-- Storage firebase
+- Het gebruik van een userID
+- Storage firebase naast de realtime database.
 
 # Day 7
 ### Veranderingen of toevoegingen in het plan:
-- foto's opslaan met een url link
+- Foto's uit de storage als url string opslaan in database.
 
 # Day 8
 ### Geïmplementeerd/toegevoegd:
 - De url's van de images uit storage ophalen en deze in de database als een array voor een locatie opslaan.
 - Een foto van een locatie ophalen uit the storage voor een locatie met glide.
 - (Alpha versie)
+
+# Day 9
+### Geïmplementeerd/toegevoegd:
+- Design en logo van de app.
+- Google maps autocomplete suggestion voor locaties in edit text (InputActivity).
+- De latitude en longitude ophalen van een plaatsnaam.
+
+### Veranderingen of toevoegingen in het plan:
+- Gebruik van autocomplete voor de locatienamen.
+- De coordinaten van de plaatsen opslaan in de database.
