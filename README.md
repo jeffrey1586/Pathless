@@ -3,6 +3,7 @@
 Name: Jeffrey Chong</br>
 Student nmr.: 11304669</br>
 Course: Programmeerproject (mprog), UvA</br>
+Credit: Patrick Chong for designing the logo</br>
 
 ### De Pathless app.
 Het ontdekken en vastleggen van nieuwe plekken op de wereld spreekt veel mensen aan.</br>
