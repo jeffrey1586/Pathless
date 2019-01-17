@@ -2,11 +2,12 @@ package com.example.mini_.pathless;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -32,11 +33,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-public class InputActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+public class InputActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener{
 
-    // widgets
+    //widgets
     AutoCompleteTextView searchLocation;
     String user;
     FirebaseAuth mAuth;
@@ -46,7 +48,7 @@ public class InputActivity extends AppCompatActivity implements GoogleApiClient.
     DatabaseReference databaseReference;
 
     //vars
-    private static final String TAG = "MapActivity";
+    private static final String TAG = "debugCheck";
     private GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mPlaceAutocompleteadapter;
     private static int RESULT_LOAD_IMAGE = 1;
@@ -78,12 +80,13 @@ public class InputActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View arg0) {
                 Intent i = new Intent(
-                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
 
-        // setting up autocomplete location edit text
+        // setting up autocomplete for places in the edit text
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -98,9 +101,9 @@ public class InputActivity extends AppCompatActivity implements GoogleApiClient.
         searchLocation.setAdapter(mPlaceAutocompleteadapter);
     }
 
+    // the method for google api connection failed listener
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     //widgets
@@ -126,16 +129,6 @@ public class InputActivity extends AppCompatActivity implements GoogleApiClient.
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
     }
 
     // the click listener for the add button
@@ -182,21 +175,34 @@ public class InputActivity extends AppCompatActivity implements GoogleApiClient.
     //widgets
     String location;
     TextView descriptionInput;
-    TextView locationInput;
+    ArrayList coordinates = new ArrayList();
 
     private void postAll() {
         // get location and description
-        locationInput = findViewById(R.id.location_text);
-        location = locationInput.getText().toString();
+        location = searchLocation.getText().toString();
         descriptionInput = findViewById(R.id.description_text);
         String description = descriptionInput.getText().toString();
         if (description.isEmpty()) {
             description = "empty";
         }
 
+        // getting latitude and longitude
+        Geocoder geocoder = new Geocoder(InputActivity.this);
+        List<Address> list;
+        try {
+            list = geocoder.getFromLocationName(location, 1);
+            Address address = list.get(0);
+            double latitude = address.getLatitude();
+            double longitude = address.getLongitude();
+            coordinates.add(latitude);
+            coordinates.add(longitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // push location, description and pictures (in array) to Firebase
         databaseReference = databaseReference.child(location);
-        Post post = new Post(location, urls, description);
+        Post post = new Post(location, urls, description, coordinates);
         databaseReference.setValue(post);
     }
 

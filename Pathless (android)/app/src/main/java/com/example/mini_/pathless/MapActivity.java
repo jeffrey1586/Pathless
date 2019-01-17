@@ -3,6 +3,7 @@ package com.example.mini_.pathless;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -18,11 +19,22 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "debugCheck";
     private GoogleMap mMap;
     FirebaseAuth mAuth;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +84,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             Log.e("MapsActivity", "Can't find style. Error: ", e);
         }
 
-        // Add the markers that are made
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("haarlem"));
-        LatLng usa = new LatLng(34, 251);
-        mMap.addMarker(new MarkerOptions().position(usa).title("USA"));
+        // setting up the Firedatabase authentication, storage and database
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser().getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+        // the event listener in order to read values from the database
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                collectCoordinates(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // set click listener on the markers
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -101,6 +126,23 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
             }
         });
+    }
+
+    private void collectCoordinates(DataSnapshot dataSnapshot) {
+        ArrayList allCoordinates = new ArrayList();
+
+        // get all coordinates from database
+//        for(DataSnapshot dsp : dataSnapshot.getChildren()){
+//            LocationInformation locInfo = new LocationInformation();
+//            locInfo.setLocation(dsp.child(user).getValue(LocationInformation.class).getLocation());
+//            locInfo.getLocation();
+//        }
+
+        // show the markers of the added locations;
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("haarlem"));
+        LatLng usa = new LatLng(34, 251);
+        mMap.addMarker(new MarkerOptions().position(usa).title("USA"));
     }
 
     // the click listener to make new location
