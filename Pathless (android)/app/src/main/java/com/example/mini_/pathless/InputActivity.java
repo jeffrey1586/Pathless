@@ -1,68 +1,57 @@
 package com.example.mini_.pathless;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.nfc.Tag;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
 
-public class InputActivity extends AppCompatActivity {
+public class InputActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
-    TextView descriptionInput;
-    TextView locationInput;
-    ImageView imageview;
-    Bitmap bitmap;
-    Uri selectedUri;
+    // widgets
+    AutoCompleteTextView searchLocation;
     String user;
-    String location;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    StorageReference ref;
-    String newUri;
-    ArrayList<Uri> listUris = new ArrayList();
-    ArrayList<String> urls = new ArrayList();
+
+    //vars
+    private static final String TAG = "MapActivity";
+    private GoogleApiClient mGoogleApiClient;
+    private PlaceAutoCompleteAdapter mPlaceAutocompleteadapter;
     private static int RESULT_LOAD_IMAGE = 1;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +82,32 @@ public class InputActivity extends AppCompatActivity {
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
+
+        // setting up autocomplete location edit text
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        mPlaceAutocompleteadapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+
+        searchLocation = findViewById(R.id.location_text);
+        searchLocation.setAdapter(mPlaceAutocompleteadapter);
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    //widgets
+    ImageView imageview;
+    Bitmap bitmap;
+    Uri selectedUri;
+    ArrayList<Uri> listUris = new ArrayList();
 
     // function that shows the pictures chosen from gallery
     @Override
@@ -114,6 +128,16 @@ public class InputActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
     // the click listener for the add button
     private class AddClickListener implements View.OnClickListener {
         @Override
@@ -123,6 +147,11 @@ public class InputActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    //widgets
+    String newUri;
+    StorageReference ref;
+    ArrayList<String> urls = new ArrayList();
 
     // this function pushes the pictures and text to the database
     private void postComment(){
@@ -149,6 +178,11 @@ public class InputActivity extends AppCompatActivity {
             });
         }
     }
+
+    //widgets
+    String location;
+    TextView descriptionInput;
+    TextView locationInput;
 
     private void postAll() {
         // get location and description

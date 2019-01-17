@@ -1,22 +1,23 @@
 package com.example.mini_.pathless;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Map;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -35,6 +36,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInAnonymously();
 
+        // show the logo on top left
+        ImageView logoImage = findViewById(R.id.logo_image);
+        logoImage.setImageResource(R.drawable.pathless_mountain);
+
         // setting click listener on the floating action button
         FloatingActionButton newContent = findViewById(R.id.newEntry_button);
         newContent.setOnClickListener(new newEntryButtonClick());
@@ -52,6 +57,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Customise the styling of the base map using a JSON object defined
+        // in a raw resource file.
+        try {
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.mapstyle));
+
+            if (!success) {
+                Log.e("MapsActivity", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivity", "Can't find style. Error: ", e);
+        }
 
         // Add the markers that are made
         LatLng sydney = new LatLng(-34, 151);
