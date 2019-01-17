@@ -57,6 +57,7 @@
 - Design en logo van de app.
 - Google maps autocomplete suggestion voor locaties in edit text (InputActivity).
 - De latitude en longitude ophalen van een plaatsnaam.</br>
+![Screenshot](doc/upgrade_layout_1.jpeg)
 ![Screenshot](doc/autocomplete_google.jpeg)
 ![Screenshot](doc/coordinates_firebase.jpeg)
 
