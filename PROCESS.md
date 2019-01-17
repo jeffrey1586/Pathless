@@ -35,6 +35,7 @@
 ### Geïmplementeerd/toegevoegd:
 - Authentication/userID wordt gemaakt per telefoon
 - Opslaan van foto's in storage
+![Screenshot](doc/authentication_firebase.jpeg)
 
 ### Veranderingen of toevoegingen in het plan:
 - Het gebruik van een userID
