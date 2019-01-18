@@ -131,16 +131,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private void collectCoordinates(DataSnapshot dataSnapshot) {
         ArrayList allCoordinates = new ArrayList();
 
-        // get all coordinates from database
-//        for(DataSnapshot dsp : dataSnapshot.getChildren()){
-//            LocationInformation locInfo = new LocationInformation();
-//            locInfo.setLocation(dsp.child(user).getValue(LocationInformation.class).getLocation());
-//            locInfo.getLocation();
-//        }
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//            Log.d(TAG, ds.child("coordinates").getChildren().toString());
+//            Log.d(TAG, ds.child("coordinates").getValue(MarkerInformation.class).getLatLong().toString());
+        }
 
         // show the markers of the added locations;
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("haarlem"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Amsterdam, Nederland"));
         LatLng usa = new LatLng(34, 251);
         mMap.addMarker(new MarkerOptions().position(usa).title("USA"));
     }

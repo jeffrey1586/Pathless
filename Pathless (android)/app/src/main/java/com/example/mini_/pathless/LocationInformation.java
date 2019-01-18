@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class LocationInformation {
     private String location, description;
     private ArrayList<String> urls = new ArrayList();
-    private ArrayList coordinates = new ArrayList();
 
     public LocationInformation(){
 
@@ -33,13 +32,5 @@ public class LocationInformation {
 
     public void setUrls(ArrayList<String> urls) {
         this.urls = urls;
-    }
-
-    public ArrayList getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(ArrayList coordinates) {
-        this.coordinates = coordinates;
     }
 }

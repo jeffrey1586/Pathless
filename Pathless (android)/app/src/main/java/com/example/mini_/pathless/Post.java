@@ -5,18 +5,15 @@ import java.util.ArrayList;
 public class Post {
     private String location, description;
     private ArrayList <String> urls;
-    private ArrayList coordinates;
 
     public Post() {
 
     }
 
-    public Post(String location, ArrayList <String> urls, String description,
-                ArrayList coordinates) {
+    public Post(String location, ArrayList <String> urls, String description) {
         this.location = location;
         this.urls = urls;
         this.description = description;
-        this.coordinates = coordinates;
     }
 
     public String getLocation() {
@@ -43,11 +40,4 @@ public class Post {
         this.description = description;
     }
 
-    public ArrayList getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(ArrayList coordinates) {
-        this.coordinates = coordinates;
-    }
 }

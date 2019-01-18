@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -23,8 +24,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -94,9 +98,9 @@ public class InputActivity extends AppCompatActivity implements
                 .enableAutoManage(this, this)
                 .build();
 
+        // set the adapter to the edit text
         mPlaceAutocompleteadapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
-
         searchLocation = findViewById(R.id.location_text);
         searchLocation.setAdapter(mPlaceAutocompleteadapter);
     }
@@ -110,21 +114,40 @@ public class InputActivity extends AppCompatActivity implements
     ImageView imageview;
     Bitmap bitmap;
     Uri selectedUri;
-    ArrayList<Uri> listUris = new ArrayList();
+    ArrayList<String> urls = new ArrayList();
 
-    // function that shows the pictures chosen from gallery
+    // function that saves and shows the pictures chosen from gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // show image that is selected from the gallery and add to array
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedUri = data.getData();
+
+            // show image that is selected from the gallery
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedUri);
                 imageview = findViewById(R.id.image_selected);
                 imageview.setImageBitmap(bitmap);
-                listUris.add(selectedUri);
+
+                // put the selected picture to the storage and add the url to array
+                Date currentTime = Calendar.getInstance().getTime();
+                ref = storageReference.child("images/" + currentTime +
+                        selectedUri.getLastPathSegment());
+                ref.putFile(selectedUri).addOnCompleteListener(
+                        new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                newUri = task.getResult();
+                                uploadUri = newUri.toString();
+                                urls.add(uploadUri);
+                            }
+                        });
+                    }
+                });
             } catch (IOException e){
                 e.printStackTrace();
             }
@@ -135,47 +158,22 @@ public class InputActivity extends AppCompatActivity implements
     private class AddClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            postComment();
+            postAll();
             Intent intent = new Intent(InputActivity.this, MapActivity.class);
             startActivity(intent);
         }
     }
 
     //widgets
-    String newUri;
+    Uri newUri;
+    String uploadUri;
     StorageReference ref;
-    ArrayList<String> urls = new ArrayList();
-
-    // this function pushes the pictures and text to the database
-    private void postComment(){
-
-        // add images to storage Firebase
-        for (int i = 0; i < listUris.size(); i++) {
-            Uri uri = listUris.get(i);
-            Date currentTime = Calendar.getInstance().getTime();
-            ref = storageReference.child("images/" + currentTime + uri.getLastPathSegment());
-            ref.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            newUri = task.getResult().toString();
-                            urls.add(newUri);
-                            if (urls.size() == listUris.size()){
-                                postAll();
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    }
 
     //widgets
     String location;
     TextView descriptionInput;
-    ArrayList coordinates = new ArrayList();
+    LatLng latLong;
+    ArrayList allPlaceNames = new ArrayList();
 
     private void postAll() {
         // get location and description
@@ -186,7 +184,13 @@ public class InputActivity extends AppCompatActivity implements
             description = "empty";
         }
 
-        // getting latitude and longitude
+        // push location, description, coordingate(LatLng) and pictures (in array) to Firebase
+        databaseReference = databaseReference.child(location);
+        Post post = new Post(location, urls, description);
+        databaseReference.setValue(post);
+
+
+        // getting LatLng of location
         Geocoder geocoder = new Geocoder(InputActivity.this);
         List<Address> list;
         try {
@@ -194,16 +198,32 @@ public class InputActivity extends AppCompatActivity implements
             Address address = list.get(0);
             double latitude = address.getLatitude();
             double longitude = address.getLongitude();
-            coordinates.add(latitude);
-            coordinates.add(longitude);
+            latLong = new LatLng(latitude, longitude);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // push location, description and pictures (in array) to Firebase
-        databaseReference = databaseReference.child(location);
-        Post post = new Post(location, urls, description, coordinates);
-        databaseReference.setValue(post);
-    }
+        // set LatLng in child with all added coordinates
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(user);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> old = (ArrayList<String>) dataSnapshot.child("places").getValue();
+                Log.d(TAG, "old" + old.toString());
+                allPlaceNames.add(old);
+                allPlaceNames.add(location);
+                Log.d(TAG, "replace" + allPlaceNames.toString());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "something went wrong");
+            }
+        });
+
+        Log.d(TAG, "new" + allPlaceNames.toString());
+        databaseReference = databaseReference.child("places");
+        databaseReference.setValue(allPlaceNames);
+    }
 }
