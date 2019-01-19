@@ -168,12 +168,11 @@ public class InputActivity extends AppCompatActivity implements
     Uri newUri;
     String uploadUri;
     StorageReference ref;
-
-    //widgets
     String location;
     TextView descriptionInput;
     LatLng latLong;
-    ArrayList allPlaceNames = new ArrayList();
+    ArrayList<String> allPlaceNames = new ArrayList<>();
+    ArrayList<String> oldPlaceNames;
 
     private void postAll() {
         // get location and description
@@ -184,7 +183,7 @@ public class InputActivity extends AppCompatActivity implements
             description = "empty";
         }
 
-        // push location, description, coordingate(LatLng) and pictures (in array) to Firebase
+        // push location, description, coordinate(LatLng) and pictures (in array) to Firebase
         databaseReference = databaseReference.child(location);
         Post post = new Post(location, urls, description);
         databaseReference.setValue(post);
@@ -205,15 +204,20 @@ public class InputActivity extends AppCompatActivity implements
 
         // set LatLng in child with all added coordinates
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(user);
+        databaseReference = firebaseDatabase.getReference().child(user);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> old = (ArrayList<String>) dataSnapshot.child("places").getValue();
-                Log.d(TAG, "old" + old.toString());
-                allPlaceNames.add(old);
+                DataSnapshot ds = dataSnapshot.child("places");
+                MarkerInformation markInfo = new MarkerInformation();
+                markInfo.setPlaceName(ds.getValue(MarkerInformation.class).getPlaceName());
+                oldPlaceNames = markInfo.getPlaceName();
+                Log.d(TAG, oldPlaceNames.toString());
+                for (int i = 0; i < oldPlaceNames.size(); i++){
+                    allPlaceNames.add(oldPlaceNames.get(i));
+                }
                 allPlaceNames.add(location);
-                Log.d(TAG, "replace" + allPlaceNames.toString());
+                Log.d(TAG, "new" + allPlaceNames.toString());
             }
 
             @Override
@@ -222,7 +226,8 @@ public class InputActivity extends AppCompatActivity implements
             }
         });
 
-        Log.d(TAG, "new" + allPlaceNames.toString());
+//        allPlaceNames.add(location);
+//        allPlaceNames.add("New York, Verenigde Staten");
         databaseReference = databaseReference.child("places");
         databaseReference.setValue(allPlaceNames);
     }
