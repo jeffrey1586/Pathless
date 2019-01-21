@@ -1,19 +1,28 @@
 package com.example.mini_.pathless;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MarkerInformation {
-    private ArrayList<String> placeName = new ArrayList<>();
+    private String location;
+    private HashMap<String, Double> coordinates;
 
     public MarkerInformation(){
 
     }
 
-    public ArrayList<String> getPlaceName() {
-        return placeName;
+    public String getLocation() {
+        return location;
     }
 
-    public void setPlaceName(ArrayList<String> placeName) {
-        this.placeName = placeName;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public HashMap<String, Double> getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(HashMap<String, Double> coordinates) {
+        this.coordinates = coordinates;
     }
 }

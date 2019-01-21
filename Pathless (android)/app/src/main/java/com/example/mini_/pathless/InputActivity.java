@@ -124,33 +124,37 @@ public class InputActivity extends AppCompatActivity implements
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedUri = data.getData();
 
-            // show image that is selected from the gallery
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedUri);
-                imageview = findViewById(R.id.image_selected);
-                imageview.setImageBitmap(bitmap);
-
-                // put the selected picture to the storage and add the url to array
-                Date currentTime = Calendar.getInstance().getTime();
-                ref = storageReference.child("images/" + currentTime +
-                        selectedUri.getLastPathSegment());
-                ref.putFile(selectedUri).addOnCompleteListener(
-                        new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                newUri = task.getResult();
-                                uploadUri = newUri.toString();
-                                urls.add(uploadUri);
+            // put the selected picture to the storage and add the url to array
+            Date currentTime = Calendar.getInstance().getTime();
+            ref = storageReference.child("images/" + currentTime +
+                    selectedUri.getLastPathSegment());
+            ref.putFile(selectedUri).addOnCompleteListener(
+                    new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            newUri = task.getResult();
+                            uploadUri = newUri.toString();
+                            urls.add(uploadUri);
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            // show picture on screen when image is added in storage
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
+                                        selectedUri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        });
-                    }
-                });
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+                            imageview = findViewById(R.id.image_selected);
+                            imageview.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -170,9 +174,13 @@ public class InputActivity extends AppCompatActivity implements
     StorageReference ref;
     String location;
     TextView descriptionInput;
-    LatLng latLong;
+    LatLng coordinates;
     ArrayList<String> allPlaceNames = new ArrayList<>();
     ArrayList<String> oldPlaceNames;
+
+    //vars
+    public int done = 0;
+    public boolean appended = false;
 
     private void postAll() {
         // get location and description
@@ -183,12 +191,6 @@ public class InputActivity extends AppCompatActivity implements
             description = "empty";
         }
 
-        // push location, description, coordinate(LatLng) and pictures (in array) to Firebase
-        databaseReference = databaseReference.child(location);
-        Post post = new Post(location, urls, description);
-        databaseReference.setValue(post);
-
-
         // getting LatLng of location
         Geocoder geocoder = new Geocoder(InputActivity.this);
         List<Address> list;
@@ -197,27 +199,44 @@ public class InputActivity extends AppCompatActivity implements
             Address address = list.get(0);
             double latitude = address.getLatitude();
             double longitude = address.getLongitude();
-            latLong = new LatLng(latitude, longitude);
+            coordinates = new LatLng(latitude, longitude);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // set LatLng in child with all added coordinates
+        // push location, description, coordinate(LatLng) and pictures (in array) to Firebase
+        databaseReference = databaseReference.child(location);
+        Post post = new Post(location, urls, description, coordinates);
+        databaseReference.setValue(post);
+
+        // insert new location name to array with all added location names
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child(user);
+        databaseReference = firebaseDatabase.getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnapshot ds = dataSnapshot.child("places");
-                MarkerInformation markInfo = new MarkerInformation();
-                markInfo.setPlaceName(ds.getValue(MarkerInformation.class).getPlaceName());
-                oldPlaceNames = markInfo.getPlaceName();
-                Log.d(TAG, oldPlaceNames.toString());
-                for (int i = 0; i < oldPlaceNames.size(); i++){
-                    allPlaceNames.add(oldPlaceNames.get(i));
+                // get existing array with added location names
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    oldPlaceNames = (ArrayList) ds.child("places").getValue();
                 }
-                allPlaceNames.add(location);
-                Log.d(TAG, "new" + allPlaceNames.toString());
+
+                // using if loop as a callback
+                if (done == 0) {
+                    for (int i = 0; i < oldPlaceNames.size(); i++) {
+                        allPlaceNames.add(oldPlaceNames.get(i));
+                        System.out.println("debugCheck" + i);
+                        Log.d(TAG, allPlaceNames.toString());
+                        done++;
+                    }
+
+                    // adding new location to the existing array
+                    if (done == oldPlaceNames.size() && appended == false) {
+                        appended = true;
+                        allPlaceNames.add(location);
+                        databaseReference = databaseReference.child(user).child("places");
+                        databaseReference.setValue(allPlaceNames);
+                    }
+                }
             }
 
             @Override
@@ -225,10 +244,5 @@ public class InputActivity extends AppCompatActivity implements
                 Log.d(TAG, "something went wrong");
             }
         });
-
-//        allPlaceNames.add(location);
-//        allPlaceNames.add("New York, Verenigde Staten");
-        databaseReference = databaseReference.child("places");
-        databaseReference.setValue(allPlaceNames);
     }
 }

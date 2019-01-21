@@ -35,6 +35,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String user;
+    ArrayList<String> PlaceNames;
+    String location;
+    public int done = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setCompassEnabled(false);
 
         // Customise the styling of the base map using a JSON object defined
         // in a raw resource file.
@@ -129,18 +133,33 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private void collectCoordinates(DataSnapshot dataSnapshot) {
-        ArrayList allCoordinates = new ArrayList();
 
+        // get array with all location names
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//            Log.d(TAG, ds.child("coordinates").getChildren().toString());
-//            Log.d(TAG, ds.child("coordinates").getValue(MarkerInformation.class).getLatLong().toString());
-        }
+            PlaceNames = (ArrayList) ds.child("places").getValue();
 
-        // show the markers of the added locations;
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Amsterdam, Nederland"));
-        LatLng usa = new LatLng(34, 251);
-        mMap.addMarker(new MarkerOptions().position(usa).title("USA"));
+            // using the if loop to prevent
+            if (done == 0) {
+                done++;
+
+                // get location name and LatLng
+                for (int i = 0; i < PlaceNames.size(); i++) {
+                    location = PlaceNames.get(i);
+                    MarkerInformation markInfo = new MarkerInformation();
+                    markInfo.setLocation(ds.child(location).getValue(
+                            MarkerInformation.class).getLocation());
+                    markInfo.setCoordinates(ds.child(location).getValue(
+                            MarkerInformation.class).getCoordinates());
+
+                    // set marker at location
+                    double lat = markInfo.getCoordinates().get("latitude");
+                    double lng = markInfo.getCoordinates().get("longitude");
+                    LatLng marker = new LatLng(lat, lng);
+                    mMap.addMarker(new MarkerOptions().position(marker).title(
+                            markInfo.getLocation()));
+                }
+            }
+        }
     }
 
     // the click listener to make new location

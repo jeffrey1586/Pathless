@@ -6,20 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
 
-    <ImageView
+    <android.support.v4.view.ViewPager
         android:id="@+id/imageSlider"
-        android:layout_width="350dp"
+        android:layout_width="368dp"
         android:layout_height="224dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/location_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[17]" />
+        app:layout_constraintVertical_bias="0.201" />
 
     <TextView
         android:id="@+id/location_text"
@@ -35,8 +35,8 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.898" />
+        app:layout_constraintTop_toBottomOf="@+id/imageSlider"
+        app:layout_constraintVertical_bias="0.336" />
+
 </android.support.constraint.ConstraintLayout>

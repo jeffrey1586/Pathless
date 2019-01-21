@@ -3,11 +3,10 @@ package com.example.mini_.pathless;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,8 +29,8 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     String location;
-    ImageView pictureFrame;
     TextView locDescription;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +66,17 @@ public class DetailActivity extends AppCompatActivity {
     private void showData(DataSnapshot dataSnapshot) {
         for (DataSnapshot ds : dataSnapshot.getChildren()){
             LocationInformation locInfo = new LocationInformation();
-            locInfo.setLocation(ds.child(location).getValue(LocationInformation.class).getLocation());
+            locInfo.setLocation(ds.child(location).getValue(
+                    LocationInformation.class).getLocation());
             locInfo.setUrls(ds.child(location).getValue(LocationInformation.class).getUrls());
-            locInfo.setDescription(ds.child(location).getValue(LocationInformation.class).getDescription());
+            locInfo.setDescription(ds.child(location).getValue(
+                    LocationInformation.class).getDescription());
 
-            // Show the images stored for clicked location
-            pictureFrame = findViewById(R.id.imageSlider);
+            // getting the urls and use them in the image adapter
             images = locInfo.getUrls();
-            for (int i = 0; i < images.size(); i++){
-                uri = images.get(i);
-                Glide.with(this)
-                        .load(uri)
-                        .into(pictureFrame);
-            }
+            viewPager = findViewById(R.id.imageSlider);
+            ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
+            viewPager.setAdapter(imageSliderAdapter);
 
             // Show description of the location
             String description = locInfo.getDescription();
