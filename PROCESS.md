@@ -65,3 +65,14 @@
 - Gebruik van autocomplete voor de locatienamen.
 - De coordinaten van de plaatsen opslaan in de database.</br>
 ![Screenshot](doc/DesignDoc9.png)
+
+# Day 10
+### Veranderingen of toevoegingen in het plan:
+- een extra array in database voor elke user waarin the plaatsnamen opgeslagen zijn.
+
+# Day 11
+### Geïmplementeerd/toegevoegd:
+- ophalen van de coordinaten van allee toegevoegde plekken
+- marker zetten op de toegevoegde plaatsen
+- imageslider
+
