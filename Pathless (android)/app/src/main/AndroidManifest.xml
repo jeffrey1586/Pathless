@@ -44,6 +44,7 @@
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MapActivity"/>
         <activity android:name=".InputActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MapActivity"/>
     </application>
 

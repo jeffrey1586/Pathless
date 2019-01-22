@@ -24,7 +24,6 @@ public class DetailActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     String user;
     ArrayList<String> images;
-    String uri;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
     StorageReference storageReference;

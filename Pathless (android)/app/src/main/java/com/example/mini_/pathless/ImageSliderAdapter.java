@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,11 @@ public class ImageSliderAdapter extends PagerAdapter {
 
         // setting the image with Glide
         String uri = images.get(position);
-        Glide.with(context).load(uri).into(imageView);
+        RequestOptions options = new RequestOptions();
+        Glide.with(context)
+                .load(uri)
+                .apply(options.centerCrop())
+                .into(imageView);
         ViewPager vp = (ViewPager) container;
         vp.addView(view, 0);
         return view;

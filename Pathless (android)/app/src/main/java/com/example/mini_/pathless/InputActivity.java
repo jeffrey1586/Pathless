@@ -6,8 +6,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +50,7 @@ public class InputActivity extends AppCompatActivity implements
     StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    ViewPager viewPager;
 
     //vars
     private static final String TAG = "debugCheck";
@@ -114,12 +115,14 @@ public class InputActivity extends AppCompatActivity implements
     ImageView imageview;
     Bitmap bitmap;
     Uri selectedUri;
+    ArrayList<String> images = new ArrayList<>();
     ArrayList<String> urls = new ArrayList();
 
     // function that saves and shows the pictures chosen from gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        buttonOff();
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedUri = data.getData();
@@ -142,20 +145,43 @@ public class InputActivity extends AppCompatActivity implements
                     }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            // show picture on screen when image is added in storage
-                            try {
-                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
-                                        selectedUri);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            imageview = findViewById(R.id.image_selected);
-                            imageview.setImageBitmap(bitmap);
+                            showImage(selectedUri);
                         }
                     });
                 }
             });
         }
+    }
+
+    // method that shows the selected images in the InputActivity
+    public void showImage(Uri selectedUri){
+        images.add(selectedUri.toString());
+        viewPager = findViewById(R.id.image_selected);
+        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
+        viewPager.setAdapter(imageSliderAdapter);
+        if (images.size() > 1){
+            ImageView galleryIcon = findViewById(R.id.gallery_icon);
+            galleryIcon.setVisibility(View.VISIBLE);
+        }
+        buttonOn();
+    }
+
+    // method that disables the buttons in the Input screen
+    public void buttonOff(){
+        Button addButton = findViewById(R.id.add_button);
+        Button galleryButton = findViewById(R.id.gallery_button);
+        addButton.setEnabled(false);
+        galleryButton.setEnabled(false);
+        galleryButton.setText("loading..");
+    }
+
+    // method that enables the buttons in the Input screen
+    public void buttonOn(){
+        Button addButton = findViewById(R.id.add_button);
+        Button galleryButton = findViewById(R.id.gallery_button);
+        addButton.setEnabled(true);
+        galleryButton.setEnabled(true);
+        galleryButton.setText("gallery");
     }
 
     // the click listener for the add button
