@@ -1,7 +1,8 @@
 package com.example.mini_.pathless;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -113,7 +114,7 @@ public class InputActivity extends AppCompatActivity implements
 
     //widgets
     ImageView imageview;
-    Bitmap bitmap;
+    ImageView noImageView;
     Uri selectedUri;
     ArrayList<String> images = new ArrayList<>();
     ArrayList<String> urls = new ArrayList();
@@ -155,6 +156,8 @@ public class InputActivity extends AppCompatActivity implements
 
     // method that shows the selected images in the InputActivity
     public void showImage(Uri selectedUri){
+        noImageView = findViewById(R.id.no_image);
+        noImageView.setVisibility(View.INVISIBLE);
         images.add(selectedUri.toString());
         viewPager = findViewById(R.id.image_selected);
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
@@ -162,6 +165,10 @@ public class InputActivity extends AppCompatActivity implements
         if (images.size() > 1){
             ImageView galleryIcon = findViewById(R.id.gallery_icon);
             galleryIcon.setVisibility(View.VISIBLE);
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            galleryIcon.setColorFilter(filter);
         }
         buttonOn();
     }
@@ -173,6 +180,10 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(false);
         galleryButton.setEnabled(false);
         galleryButton.setText("loading..");
+//        addButton.setBackgroundColor(Color.parseColor("#cacaca"));
+//        galleryButton.setBackgroundColor(Color.parseColor("#cacaca"));
+//        addButton.setTextColor(Color.parseColor("#363636"));
+//        galleryButton.setTextColor(Color.parseColor("#363636"));
     }
 
     // method that enables the buttons in the Input screen
@@ -182,6 +193,10 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(true);
         galleryButton.setEnabled(true);
         galleryButton.setText("gallery");
+//        addButton.setBackgroundColor(Color.parseColor("#ffff"));
+//        galleryButton.setBackgroundColor(Color.parseColor("#ffff"));
+//        addButton.setTextColor(Color.parseColor("#0000"));
+//        galleryButton.setTextColor(Color.parseColor("#0000"));
     }
 
     // the click listener for the add button
@@ -194,11 +209,12 @@ public class InputActivity extends AppCompatActivity implements
         }
     }
 
-    //widgets
+    // widgets
     Uri newUri;
     String uploadUri;
     StorageReference ref;
     String location;
+    Boolean duplicate = false;
     TextView descriptionInput;
     LatLng coordinates;
     ArrayList<String> allPlaceNames = new ArrayList<>();
@@ -208,7 +224,9 @@ public class InputActivity extends AppCompatActivity implements
     public int done = 0;
     public boolean appended = false;
 
+    // method that pushes all the location information to firebase database
     private void postAll() {
+
         // get location and description
         location = searchLocation.getText().toString();
         descriptionInput = findViewById(R.id.description_text);
@@ -230,7 +248,7 @@ public class InputActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        // push location, description, coordinate(LatLng) and pictures (in array) to Firebase
+        // push location, description, coordinate(LatLng) and pictures(in an array) to Firebase
         databaseReference = databaseReference.child(location);
         Post post = new Post(location, urls, description, coordinates);
         databaseReference.setValue(post);
@@ -241,6 +259,7 @@ public class InputActivity extends AppCompatActivity implements
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 // get existing array with added location names
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     oldPlaceNames = (ArrayList) ds.child("places").getValue();
@@ -250,15 +269,18 @@ public class InputActivity extends AppCompatActivity implements
                 if (done == 0) {
                     for (int i = 0; i < oldPlaceNames.size(); i++) {
                         allPlaceNames.add(oldPlaceNames.get(i));
-                        System.out.println("debugCheck" + i);
-                        Log.d(TAG, allPlaceNames.toString());
                         done++;
+                        if (oldPlaceNames.get(i).equals(location)){
+                            duplicate = true;
+                        }
                     }
 
                     // adding new location to the existing array
-                    if (done == oldPlaceNames.size() && appended == false) {
+                    if (done == oldPlaceNames.size() && !appended) {
                         appended = true;
-                        allPlaceNames.add(location);
+                        if (!duplicate){
+                            allPlaceNames.add(location);
+                        }
                         databaseReference = databaseReference.child(user).child("places");
                         databaseReference.setValue(allPlaceNames);
                     }

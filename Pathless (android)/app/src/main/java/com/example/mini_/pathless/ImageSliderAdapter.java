@@ -50,6 +50,7 @@ public class ImageSliderAdapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.custom_layout, null);
         ImageView imageView = view.findViewById(R.id.imageView);
 
+
         // setting the image with Glide
         String uri = images.get(position);
         RequestOptions options = new RequestOptions();

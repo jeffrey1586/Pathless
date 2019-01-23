@@ -29,14 +29,17 @@ import java.util.ArrayList;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "debugCheck";
-    private GoogleMap mMap;
+    // widgets
     FirebaseAuth mAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String user;
     ArrayList<String> PlaceNames;
     String location;
+
+    // vars
+    private static final String TAG = "debugCheck";
+    private GoogleMap mMap;
     public int done = 0;
 
     @Override
@@ -48,6 +51,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // user sign in to Firebase
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInAnonymously();
 
@@ -69,6 +73,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
