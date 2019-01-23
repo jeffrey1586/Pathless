@@ -76,3 +76,17 @@
 - marker zetten op de toegevoegde plaatsen
 - imageslider
 
+# Day 12
+### Veranderingen of toevoegingen in het plan:
+- landscap orientation
+- buttons in de InputActivity zijn disabled als er foto's gepusht worden naar firebase en zijn weer enabled als dat klaar is.
+
+### Veranderingen of toevoegingen in het plan:
+- image slider in de InputActivity
+
+# Day 12
+### Veranderingen of toevoegingen in het plan:
+-
+
+### Veranderingen of toevoegingen in het plan:
+- 
