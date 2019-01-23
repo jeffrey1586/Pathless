@@ -7,6 +7,26 @@
     android:background="#263041"
     tools:context=".DetailActivity">
 
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="17dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="bottom"
+        android:padding="10dip"
+        app:centered="true"
+        app:fillColor="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/location_text"
+        app:layout_constraintEnd_toEndOf="@+id/imageSlider"
+        app:layout_constraintStart_toStartOf="@+id/imageSlider"
+        app:layout_constraintTop_toBottomOf="@+id/imageSlider"
+        app:layout_constraintVertical_bias="0.0"
+        app:pageColor="#ffff"
+        app:snap="false" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/imageSlider"
         android:layout_width="match_parent"

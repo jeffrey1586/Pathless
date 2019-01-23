@@ -15,11 +15,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
+    //widgets
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String user;
@@ -30,6 +32,9 @@ public class DetailActivity extends AppCompatActivity {
     String location;
     TextView locDescription;
     ViewPager viewPager;
+
+    //vars
+    public int currentPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,23 @@ public class DetailActivity extends AppCompatActivity {
             viewPager = findViewById(R.id.imageSlider);
             ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
             viewPager.setAdapter(imageSliderAdapter);
+
+            // setting up the indicator for the image slider
+            // ViewPagerIndicator project from Jake Wharton (github)
+            CirclePageIndicator indicator = findViewById(R.id.indicator);
+            indicator.setViewPager(viewPager);
+            indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int i, float v, int i1) {
+                }
+                @Override
+                public void onPageSelected(int position) {
+                    currentPage = position;
+                }
+                @Override
+                public void onPageScrollStateChanged(int i) {
+                }
+            });
 
             // Show description of the location
             String description = locInfo.getDescription();

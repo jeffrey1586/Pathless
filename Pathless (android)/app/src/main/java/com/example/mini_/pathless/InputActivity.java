@@ -1,8 +1,6 @@
 package com.example.mini_.pathless;
 
 import android.content.Intent;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -33,12 +31,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+/**
+ * This CirclePageIndicator is created by a viewPagerIndicator project
+ * from JakeWharton's github.
+ */
 
 public class InputActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener{
@@ -114,10 +118,12 @@ public class InputActivity extends AppCompatActivity implements
 
     //widgets
     ImageView imageview;
-    ImageView noImageView;
     Uri selectedUri;
     ArrayList<String> images = new ArrayList<>();
     ArrayList<String> urls = new ArrayList();
+
+    //vars
+    public int currentPage = 0;
 
     // function that saves and shows the pictures chosen from gallery
     @Override
@@ -156,21 +162,28 @@ public class InputActivity extends AppCompatActivity implements
 
     // method that shows the selected images in the InputActivity
     public void showImage(Uri selectedUri){
-        noImageView = findViewById(R.id.no_image);
-        noImageView.setVisibility(View.INVISIBLE);
         images.add(selectedUri.toString());
         viewPager = findViewById(R.id.image_selected);
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
         viewPager.setAdapter(imageSliderAdapter);
-        if (images.size() > 1){
-            ImageView galleryIcon = findViewById(R.id.gallery_icon);
-            galleryIcon.setVisibility(View.VISIBLE);
-            ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0);
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-            galleryIcon.setColorFilter(filter);
-        }
         buttonOn();
+
+        // setting up the indicator for the image slider
+        // ViewPagerIndicator project from Jake Wharton (github)
+        CirclePageIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(viewPager);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                currentPage = position;
+            }
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
     }
 
     // method that disables the buttons in the Input screen
@@ -180,10 +193,6 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(false);
         galleryButton.setEnabled(false);
         galleryButton.setText("loading..");
-//        addButton.setBackgroundColor(Color.parseColor("#cacaca"));
-//        galleryButton.setBackgroundColor(Color.parseColor("#cacaca"));
-//        addButton.setTextColor(Color.parseColor("#363636"));
-//        galleryButton.setTextColor(Color.parseColor("#363636"));
     }
 
     // method that enables the buttons in the Input screen
@@ -193,10 +202,6 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(true);
         galleryButton.setEnabled(true);
         galleryButton.setText("gallery");
-//        addButton.setBackgroundColor(Color.parseColor("#ffff"));
-//        galleryButton.setBackgroundColor(Color.parseColor("#ffff"));
-//        addButton.setTextColor(Color.parseColor("#0000"));
-//        galleryButton.setTextColor(Color.parseColor("#0000"));
     }
 
     // the click listener for the add button
