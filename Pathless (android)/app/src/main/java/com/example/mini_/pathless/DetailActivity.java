@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("images/");
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        databaseReference = firebaseDatabase.getReference(user);
 
         // the event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -68,44 +68,43 @@ public class DetailActivity extends AppCompatActivity {
 
     // getting the specific location's data from the database
     private void showData(DataSnapshot dataSnapshot) {
-        for (DataSnapshot ds : dataSnapshot.getChildren()){
-            LocationInformation locInfo = new LocationInformation();
-            locInfo.setLocation(ds.child(location).getValue(
-                    LocationInformation.class).getLocation());
-            locInfo.setUrls(ds.child(location).getValue(LocationInformation.class).getUrls());
-            locInfo.setDescription(ds.child(location).getValue(
-                    LocationInformation.class).getDescription());
+        LocationInformation locInfo = new LocationInformation();
+        locInfo.setLocation(dataSnapshot.child(location).getValue(
+                LocationInformation.class).getLocation());
+        locInfo.setUrls(dataSnapshot.child(location).getValue(LocationInformation.class).getUrls());
+        locInfo.setDescription(dataSnapshot.child(location).getValue(
+                LocationInformation.class).getDescription());
 
-            // getting the urls and use them in the image adapter
-            images = locInfo.getUrls();
-            viewPager = findViewById(R.id.imageSlider);
-            ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
-            viewPager.setAdapter(imageSliderAdapter);
+        // getting the urls and use them in the image adapter
+        images = locInfo.getUrls();
+        viewPager = findViewById(R.id.imageSlider);
+        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
+        viewPager.setAdapter(imageSliderAdapter);
 
-            // setting up the indicator for the image slider
-            // ViewPagerIndicator project from Jake Wharton (github)
-            CirclePageIndicator indicator = findViewById(R.id.indicator);
-            indicator.setViewPager(viewPager);
-            indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int i, float v, int i1) {
-                }
-                @Override
-                public void onPageSelected(int position) {
+        // setting up the indicator for the image slider
+        // ViewPagerIndicator project from Jake Wharton (github)
+        CirclePageIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(viewPager);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+            @Override
+            public void onPageSelected(int position) {
                     currentPage = position;
                 }
                 @Override
                 public void onPageScrollStateChanged(int i) {
+
                 }
             });
 
-            // Show description of the location
-            String description = locInfo.getDescription();
-            if (description == "empty"){
-                description = "";
-            }
-            locDescription = findViewById(R.id.location_text);
-            locDescription.setText(description);
+        // Show description of the location
+        String description = locInfo.getDescription();
+        if (description == "empty"){
+            description = "";
         }
+        locDescription = findViewById(R.id.location_text);
+        locDescription.setText(description);
     }
 }

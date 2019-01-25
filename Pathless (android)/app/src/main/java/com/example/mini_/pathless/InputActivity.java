@@ -15,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -132,10 +133,10 @@ public class InputActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        buttonOff();
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedUri = data.getData();
+            buttonOff();
 
             // put the selected picture to the storage and add the url to array
             Date currentTime = Calendar.getInstance().getTime();
@@ -219,27 +220,25 @@ public class InputActivity extends AppCompatActivity implements
 
     // the click listener for the add button
     private class AddClickListener implements View.OnClickListener {
-
-        String location;
         @Override
         public void onClick(View v) {
-            postAll();
 
-//            // get new location
-//            location = searchLocation.getText().toString();
-//
-//            if(!urls.isEmpty()){
-//                Toast.makeText(Context., "no images added", Toast.LENGTH_SHORT);
-//            }
-//            else if(!location.isEmpty()){
-//                Toast.makeText(this, "no location", );
-//            }
-//            else{
-//                Intent intent = new Intent(InputActivity.this, MapActivity.class);
-//                startActivity(intent);
-//            }
-            Intent intent = new Intent(InputActivity.this, MapActivity.class);
-            startActivity(intent);
+            // check for a location input and added images
+            if (searchLocation.getText().toString().isEmpty()){
+                Toast.makeText(InputActivity.this, "Please enter a location",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else if (urls.isEmpty()) {
+                Toast.makeText(InputActivity.this, "Please add at least one image",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            // post all information and go to the main screen
+            else {
+                postAll();
+                Intent intent = new Intent(InputActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -335,8 +334,6 @@ public class InputActivity extends AppCompatActivity implements
         }
 
         // push location, description, coordinate(LatLng) and pictures(in an array) to Firebase
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(user);
         databaseReference = databaseReference.child(location);
         Post post = new Post(location, urls, description, coordinates);
         databaseReference.setValue(post);
