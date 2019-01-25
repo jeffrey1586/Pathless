@@ -97,13 +97,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        databaseReference = firebaseDatabase.getReference(user);
 
         // the event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                collectCoordinates(dataSnapshot);
+                if(dataSnapshot.child("places").exists()){
+                    collectCoordinates(dataSnapshot);
+                }
             }
 
             @Override
@@ -137,32 +139,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
     }
 
+    // method that collects all coordinates and put the markers on the map
     private void collectCoordinates(DataSnapshot dataSnapshot) {
 
-        // get array with all location names
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            PlaceNames = (ArrayList) ds.child("places").getValue();
+        // using the if loop to prevent double runs of the code
+        if (done == 0){
+            PlaceNames = (ArrayList) dataSnapshot.child("places").getValue();
+            done++;
 
-            // using the if loop to prevent
-            if (done == 0) {
-                done++;
+            // get location name and LatLng
+            for (int i = 0; i < PlaceNames.size(); i++) {
+                location = PlaceNames.get(i);
+                MarkerInformation markInfo = new MarkerInformation();
+                markInfo.setLocation(dataSnapshot.child(location).getValue(
+                        MarkerInformation.class).getLocation());
+                markInfo.setCoordinates(dataSnapshot.child(location).getValue(
+                        MarkerInformation.class).getCoordinates());
 
-                // get location name and LatLng
-                for (int i = 0; i < PlaceNames.size(); i++) {
-                    location = PlaceNames.get(i);
-                    MarkerInformation markInfo = new MarkerInformation();
-                    markInfo.setLocation(ds.child(location).getValue(
-                            MarkerInformation.class).getLocation());
-                    markInfo.setCoordinates(ds.child(location).getValue(
-                            MarkerInformation.class).getCoordinates());
-
-                    // set marker at location
-                    double lat = markInfo.getCoordinates().get("latitude");
-                    double lng = markInfo.getCoordinates().get("longitude");
-                    LatLng marker = new LatLng(lat, lng);
-                    mMap.addMarker(new MarkerOptions().position(marker).title(
-                            markInfo.getLocation()));
-                }
+                // set marker at location
+                double lat = markInfo.getCoordinates().get("latitude");
+                double lng = markInfo.getCoordinates().get("longitude");
+                LatLng marker = new LatLng(lat, lng);
+                mMap.addMarker(new MarkerOptions().position(marker).title(
+                        markInfo.getLocation()));
             }
         }
     }

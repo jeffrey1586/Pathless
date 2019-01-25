@@ -1,6 +1,7 @@
 package com.example.mini_.pathless;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -48,6 +49,8 @@ public class InputActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener{
 
     //widgets
+    int grey = Color.parseColor("#9f9f9f");
+    int black = Color.parseColor("#000000");
     AutoCompleteTextView searchLocation;
     String user;
     FirebaseAuth mAuth;
@@ -162,6 +165,12 @@ public class InputActivity extends AppCompatActivity implements
 
     // method that shows the selected images in the InputActivity
     public void showImage(Uri selectedUri){
+
+        //set no image picture invisible
+        ImageView noImageView = findViewById(R.id.no_image);
+        noImageView.setVisibility(View.INVISIBLE);
+
+        // add new image to image slider
         images.add(selectedUri.toString());
         viewPager = findViewById(R.id.image_selected);
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
@@ -193,6 +202,8 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(false);
         galleryButton.setEnabled(false);
         galleryButton.setText("loading..");
+        galleryButton.setTextColor(grey);
+        addButton.setTextColor(grey);
     }
 
     // method that enables the buttons in the Input screen
@@ -202,23 +213,41 @@ public class InputActivity extends AppCompatActivity implements
         addButton.setEnabled(true);
         galleryButton.setEnabled(true);
         galleryButton.setText("gallery");
+        galleryButton.setTextColor(black);
+        addButton.setTextColor(black);
     }
 
     // the click listener for the add button
     private class AddClickListener implements View.OnClickListener {
+
+        String location;
         @Override
         public void onClick(View v) {
             postAll();
+
+//            // get new location
+//            location = searchLocation.getText().toString();
+//
+//            if(!urls.isEmpty()){
+//                Toast.makeText(Context., "no images added", Toast.LENGTH_SHORT);
+//            }
+//            else if(!location.isEmpty()){
+//                Toast.makeText(this, "no location", );
+//            }
+//            else{
+//                Intent intent = new Intent(InputActivity.this, MapActivity.class);
+//                startActivity(intent);
+//            }
             Intent intent = new Intent(InputActivity.this, MapActivity.class);
             startActivity(intent);
         }
     }
 
     // widgets
+    String location;
     Uri newUri;
     String uploadUri;
     StorageReference ref;
-    String location;
     Boolean duplicate = false;
     TextView descriptionInput;
     LatLng coordinates;
@@ -232,8 +261,60 @@ public class InputActivity extends AppCompatActivity implements
     // method that pushes all the location information to firebase database
     private void postAll() {
 
-        // get location and description
+        // get new location
         location = searchLocation.getText().toString();
+
+        // insert new location name to array with all added location names
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference(user);
+
+                // check if any location is added
+                // and using done variable to prevent double appends to array
+                if (dataSnapshot.exists() && done == 0) {
+                    oldPlaceNames = (ArrayList) dataSnapshot.child("places").getValue();
+                    done++;
+
+                    // add already added places to new array
+                    for (int i = 0; i < oldPlaceNames.size(); i++) {
+                        allPlaceNames.add(oldPlaceNames.get(i));
+
+                        // add new location to the new array if it does not exist in the array
+                        if (oldPlaceNames.get(i).equals(location)) {
+                            duplicate = true;
+                        }
+                    }
+
+                    // if statement so array wil not be set multiple times to Firebase
+                    if (done == oldPlaceNames.size() && !appended) {
+                        appended = true;
+
+                        // adding new location to the existing array
+                        if (!duplicate) {
+                            allPlaceNames.add(location);
+                        }
+                        databaseReference = databaseReference.child("places");
+                        databaseReference.setValue(allPlaceNames);
+                    }
+                }
+
+                // if user has not yet added any places
+                else if (!dataSnapshot.exists() && done == 0){
+                    allPlaceNames.add(location);
+                    databaseReference = databaseReference.child("places");
+                    databaseReference.setValue(allPlaceNames);
+                    done = 1;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "something went wrong");
+            }
+        });
+
+        // get description
         descriptionInput = findViewById(R.id.description_text);
         String description = descriptionInput.getText().toString();
         if (description.isEmpty()) {
@@ -254,48 +335,10 @@ public class InputActivity extends AppCompatActivity implements
         }
 
         // push location, description, coordinate(LatLng) and pictures(in an array) to Firebase
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(user);
         databaseReference = databaseReference.child(location);
         Post post = new Post(location, urls, description, coordinates);
         databaseReference.setValue(post);
-
-        // insert new location name to array with all added location names
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                // get existing array with added location names
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    oldPlaceNames = (ArrayList) ds.child("places").getValue();
-                }
-
-                // using if loop as a callback
-                if (done == 0) {
-                    for (int i = 0; i < oldPlaceNames.size(); i++) {
-                        allPlaceNames.add(oldPlaceNames.get(i));
-                        done++;
-                        if (oldPlaceNames.get(i).equals(location)){
-                            duplicate = true;
-                        }
-                    }
-
-                    // adding new location to the existing array
-                    if (done == oldPlaceNames.size() && !appended) {
-                        appended = true;
-                        if (!duplicate){
-                            allPlaceNames.add(location);
-                        }
-                        databaseReference = databaseReference.child(user).child("places");
-                        databaseReference.setValue(allPlaceNames);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, "something went wrong");
-            }
-        });
     }
 }
