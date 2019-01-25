@@ -84,9 +84,13 @@
 ### Veranderingen of toevoegingen in het plan:
 - image slider in de InputActivity
 
-# Day 12
+# Day 13
+### Geïmplementeerd/toegevoegd:
+- een indicator in de vorm van rondjes onder het scherm die de hoeveelheid foto's aangeven in laat zijn naar de hoeveelste foto je aan het kijken bent
+
+# Day 14
+- Hackothon
+
+# Day 15
 ### Veranderingen of toevoegingen in het plan:
 -
-
-### Veranderingen of toevoegingen in het plan:
-- 
