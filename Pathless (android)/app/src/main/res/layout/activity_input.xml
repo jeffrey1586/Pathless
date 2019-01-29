@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="@+id/image_selected"
         app:layout_constraintStart_toStartOf="@+id/image_selected"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.64"
+        app:layout_constraintVertical_bias="0.62"
         app:pageColor="#ffff"
         app:snap="false" />
 
@@ -38,15 +38,15 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
-        android:background="#ffff"
-        android:backgroundTint="#ffff"
+        android:background="#2b384d"
+        android:backgroundTint="#303f58"
         android:ems="10"
         android:fontFamily="@font/montserrat"
         android:gravity="top|left"
         android:hint="Description"
         android:inputType="textMultiLine"
-        android:textColor="#222"
-        android:textColorHint="#838383"
+        android:textColor="#ffffff"
+        android:textColorHint="#d9d9d9"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
 
     <Button
         android:id="@+id/gallery_button"
-        android:layout_width="wrap_content"
+        android:layout_width="314dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -64,14 +64,16 @@
         android:layout_marginBottom="8dp"
         android:backgroundTint="@android:color/white"
         android:fontFamily="@font/montserrat"
-        android:text="Gallery"
+        android:text="add image"
+        android:textAllCaps="false"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.73" />
+        app:layout_constraintVertical_bias="0.72" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/image_selected"

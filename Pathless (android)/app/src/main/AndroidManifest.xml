@@ -35,17 +35,22 @@
         <activity
             android:name=".MapActivity"
             android:label="Pathless">
+        </activity>
+        <activity android:name=".WelcomeScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
-            android:parentActivityName=".MapActivity"/>
-        <activity android:name=".InputActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MapActivity"/>
+        <activity
+            android:name=".DetailActivity"
+            android:parentActivityName=".MapActivity" />
+        <activity
+            android:name=".InputActivity"
+            android:parentActivityName=".MapActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

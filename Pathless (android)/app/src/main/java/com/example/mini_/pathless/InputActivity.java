@@ -75,9 +75,6 @@ public class InputActivity extends AppCompatActivity implements
     ViewPager viewPager;
     int grey = Color.parseColor("#9f9f9f");
     int black = Color.parseColor("#000000");
-    Uri noImageUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/pathless-" +
-            "android.appspot.com/o/images%2Fno_image.jpg?alt=media&token=50b7562c-5c11-" +
-            "42bc-b785-5e51b0360265");
 
     // Vars
     public int currentPage = 0;
@@ -101,9 +98,6 @@ public class InputActivity extends AppCompatActivity implements
         storageReference = storage.getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
-
-        // Show 'no image selected' picture
-        showImage(noImageUri);
 
         // Button to add pictures from gallery
         Button buttonLoadImage = findViewById(R.id.gallery_button);
@@ -225,18 +219,9 @@ public class InputActivity extends AppCompatActivity implements
     // Method that shows the selected images in the InputActivity
     public void showImage(Uri selectedUri){
 
-        // Add 'no image selected' picture to adapter
-        if (selectedUri == noImageUri){
-            images.add(selectedUri.toString());
-            imageSliderAdapter = new ImageSliderAdapter(this, images);
-            images = new ArrayList<>();
-        }
-
         // Add selected image to image slider
-        else {
-            images.add(selectedUri.toString());
-            imageSliderAdapter = new ImageSliderAdapter(this, images);
-        }
+        images.add(selectedUri.toString());
+        imageSliderAdapter = new ImageSliderAdapter(this, images);
 
         // Set the adapter for the image slider
         viewPager = findViewById(R.id.image_selected);
@@ -245,26 +230,24 @@ public class InputActivity extends AppCompatActivity implements
 
         // Setting up the indicator for the image slider,
         // ViewPagerIndicator project from Jake Wharton (github)
-        if (selectedUri != noImageUri){
-            CirclePageIndicator indicator = findViewById(R.id.indicator);
-            indicator.setViewPager(viewPager);
-            indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int i, float v, int i1) {
-                }
-                @Override
-                public void onPageSelected(int position) {
+        CirclePageIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(viewPager);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+            @Override
+            public void onPageSelected(int position) {
                     currentPage = position;
                 }
                 @Override
                 public void onPageScrollStateChanged(int i) {
                 }
-            });
-        }
+        });
     }
 
     // Method that disables the buttons in the Input screen
-    public void buttonOff(){
+    public void buttonOff() {
         upload = false;
         Button galleryButton = findViewById(R.id.gallery_button);
         galleryButton.setEnabled(false);
@@ -273,11 +256,16 @@ public class InputActivity extends AppCompatActivity implements
     }
 
     // Method that enables the buttons in the Input screen
-    public void buttonOn(){
+    public void buttonOn() {
         upload = true;
         Button galleryButton = findViewById(R.id.gallery_button);
         galleryButton.setEnabled(true);
-        galleryButton.setText("gallery");
+        if(images.isEmpty()) {
+            galleryButton.setText("add image");
+        }
+        else {
+            galleryButton.setText("add more images");
+        }
         galleryButton.setTextColor(black);
     }
 

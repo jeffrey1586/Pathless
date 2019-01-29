@@ -59,7 +59,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         // Show the logo on top left
         ImageView logoImage = findViewById(R.id.logo_image);
-        logoImage.setImageResource(R.drawable.pathless_mountain);
+        logoImage.setImageResource(R.drawable.einde);
 
         // Setting click listener on the floating action button
         FloatingActionButton newContent = findViewById(R.id.newEntry_button);
