@@ -118,8 +118,8 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
 
         AutocompletePrediction item = getItem(position);
 
-        TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
-        TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
+        TextView textView1 = row.findViewById(android.R.id.text1);
+        TextView textView2 = row.findViewById(android.R.id.text2);
         textView1.setText(item.getPrimaryText(STYLE_BOLD));
         textView2.setText(item.getSecondaryText(STYLE_BOLD));
 
@@ -202,11 +202,11 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
             // Submit the query to the autocomplete API and retrieve a PendingResult that will
             // contain the results when the query completes.
             PendingResult<AutocompletePredictionBuffer> results =
-                    Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, constraint.toString(), mBounds,
-                            mPlaceFilter);
+                    Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient,
+                            constraint.toString(), mBounds, mPlaceFilter);
 
-            // This method should have been called off the main UI thread. Block and wait for at most
-            // 60s for a result from the API.
+            // This method should have been called off the main UI thread. Block and wait
+            // for at most 60s for a result from the API.
             AutocompletePredictionBuffer autocompletePredictions = results.await(
                     60, TimeUnit.SECONDS);
 
@@ -214,7 +214,8 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
             if (!status.isSuccess()) {
                 Toast.makeText(getContext(), "Error contacting API: " + status.toString(),
                         Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error getting autocomplete prediction API call" + status.toString());
+                Log.e(TAG, "Error getting autocomplete prediction API call" +
+                        status.toString());
                 return null;
             }
             Log.i(TAG, "Query completed. Received " + autocompletePredictions.getCount()

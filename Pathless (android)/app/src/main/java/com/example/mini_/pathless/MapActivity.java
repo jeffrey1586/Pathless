@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    // widgets
+    // Widgets
     FirebaseAuth mAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -37,7 +38,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     ArrayList<String> placeNames;
     String location;
 
-    // vars
+    // Vars
     private static final String TAG = "debugCheck";
     private GoogleMap mMap;
     public int done = 0;
@@ -47,20 +48,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // user sign in to Firebase
+        // User sign in to Firebase
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInAnonymously();
 
-        // show the logo on top left
+        // Show the logo on top left
         ImageView logoImage = findViewById(R.id.logo_image);
         logoImage.setImageResource(R.drawable.pathless_mountain);
 
-        // setting click listener on the floating action button
+        // Setting click listener on the floating action button
         FloatingActionButton newContent = findViewById(R.id.newEntry_button);
         newContent.setOnClickListener(new newEntryButtonClick());
     }
@@ -80,8 +81,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
         mMap.getUiSettings().setCompassEnabled(false);
 
-        // Customise the styling of the base map using a JSON object defined
-        // in a raw resource file.
+        // Customise the styling of the base map using a JSON object defined in a raw resource file
         try {
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -100,7 +100,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
 
-        // the event listener in order to read values from the database
+        // The event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -111,11 +111,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(MapActivity.this, "database connection error",
+                        Toast.LENGTH_SHORT);
             }
         });
 
-        // set click listener on the markers
+        // Set click listener on all markers
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker m) {
@@ -126,7 +127,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
-        // set click listener on the info window and put the location in the intent
+        // Set click listener on the info windows and put the location in the intent
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker m) {
@@ -140,15 +141,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
     }
 
-    // method that collects all coordinates and put the markers on the map
+    // Method that collects all coordinates and put the markers on the map
     private void collectCoordinates(DataSnapshot dataSnapshot) {
 
-        // using the if loop to prevent double runs of the code
+        // Using the if loop to prevent double runs of getting the location information
         if (done == 0){
             placeNames = (ArrayList) dataSnapshot.child("places").getValue();
             done++;
 
-            // get location name and LatLng
+            // Get location name and LatLng
             for (int i = 0; i < placeNames.size(); i++) {
                 location = placeNames.get(i);
                 MarkerInformation markInfo = new MarkerInformation();
@@ -157,7 +158,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 markInfo.setCoordinates(dataSnapshot.child(location).getValue(
                         MarkerInformation.class).getCoordinates());
 
-                // set marker at location
+                // Set markers at the added locations
                 double lat = markInfo.getCoordinates().get("latitude");
                 double lng = markInfo.getCoordinates().get("longitude");
                 LatLng marker = new LatLng(lat, lng);
@@ -167,7 +168,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
-    // the click listener to make new location
+    // The click listener to make a new location
     private class newEntryButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {

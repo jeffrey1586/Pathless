@@ -47,13 +47,13 @@ public class ImageSliderAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
-        // Setting up the inflater, view and imageView.
+        // Setting up the inflater, view and imageView
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.custom_layout, null);
         ImageView imageView = view.findViewById(R.id.imageView);
 
 
-        // Setting the image with Glide.
+        // Setting the image with Glide
         String uri = images.get(position);
         RequestOptions options = new RequestOptions();
         Glide.with(context)
@@ -65,7 +65,7 @@ public class ImageSliderAdapter extends PagerAdapter {
         return view;
     }
 
-    // The remove method of the viewPager.
+    // The remove method of the viewPager
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         ViewPager vp = (ViewPager) container;

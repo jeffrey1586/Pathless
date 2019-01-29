@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/confirm"
         android:orderInCategory="100"
         android:icon="@drawable/icons8_checkmark_48"
         android:title="Refresh"

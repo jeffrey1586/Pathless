@@ -5,7 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +26,7 @@ import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
-    // Widgets.
+    // Widgets
     ArrayList<String> images;
     DatabaseReference databaseReference;
     FirebaseAuth mAuth;
@@ -33,7 +38,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView locDescription;
     ViewPager viewPager;
 
-    // Vars.
+    // Vars
     public int currentPage = 0;
 
     @Override
@@ -41,11 +46,11 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Getting the clicked location.
+        // Getting the clicked location
         Intent intent = getIntent();
         location = intent.getStringExtra("location");
 
-        // Setting up the Firebase authentication, storage and database.
+        // Setting up the Firebase authentication, storage and database
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance();
@@ -53,17 +58,48 @@ public class DetailActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
 
-        // The event listener in order to read values from the database.
+        // The event listener in order to read values from the database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 showData(dataSnapshot);
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ds = ds.child("places");
+                    Log.v(ds.child(location));
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(DetailActivity.this, "database connection failed",
+                        Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    // Puts the delete item on the top right of the actionbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.delete, menu);
+        return true;
+    }
+
+    // Controls the action on an item in the actionbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Delete location if bin icon is clicked
+        if (item.toString().equals("Refresh")) {
+            DeleteLocation();
+        }
+
+        // Go back to map screen when back arrow is clicked
+        else {
+            Intent intent = new Intent(DetailActivity.this, MapActivity.class);
+            startActivity(intent);
+        }
+        return true;
     }
 
     // Getting the specific location's data from the database.
@@ -95,7 +131,6 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onPageScrollStateChanged(int i) {
-
                 }
             });
 
@@ -106,5 +141,10 @@ public class DetailActivity extends AppCompatActivity {
         }
         locDescription = findViewById(R.id.location_text);
         locDescription.setText(description);
+    }
+
+    public void DeleteLocation() {
+        databaseReference = databaseReference.child("places").child(location);
+        databaseReference.removeValue();
     }
 }
