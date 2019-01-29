@@ -10,10 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,19 +51,39 @@ import java.util.List;
 public class InputActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener{
 
-    //widgets
-    int grey = Color.parseColor("#9f9f9f");
-    int black = Color.parseColor("#000000");
+    // Widgets.
+    ArrayList<String> allPlaceNames = new ArrayList<>();
+    ArrayList<String> images = new ArrayList<>();
+    ArrayList<String> urls = new ArrayList();
+    ArrayList<String> oldPlaceNames;
     AutoCompleteTextView searchLocation;
-    String user;
+    Boolean duplicate = false;
+    Boolean upload = false;
+    DatabaseReference databaseReference;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
-    StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    ImageSliderAdapter imageSliderAdapter;
+    LatLng coordinates;
+    StorageReference ref;
+    StorageReference storageReference;
+    String location;
+    String user;
+    String uploadUri;
+    TextView descriptionInput;
+    Uri newUri;
+    Uri selectedUri;
     ViewPager viewPager;
+    int grey = Color.parseColor("#9f9f9f");
+    int black = Color.parseColor("#000000");
+    Uri noImageUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/pathless-" +
+            "android.appspot.com/o/images%2Fno_image.jpg?alt=media&token=50b7562c-5c11-" +
+            "42bc-b785-5e51b0360265");
 
-    //vars
+    // Vars.
+    public int currentPage = 0;
+    public int done = 0;
+    public boolean appended = false;
     private static final String TAG = "debugCheck";
     private GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mPlaceAutocompleteadapter;
@@ -69,12 +91,13 @@ public class InputActivity extends AppCompatActivity implements
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
 
-        // setup Firebase userId, storage and database
+        // Setup Firebase userId, storage and database.
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance();
@@ -82,15 +105,14 @@ public class InputActivity extends AppCompatActivity implements
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
 
-        // connecting the add button to a click listener
-        Button addButton = findViewById(R.id.add_button);
-        addButton.setOnClickListener(new AddClickListener());
+        // Show no image picture.
+        showImage(noImageUri);
 
-        // button to add pictures from gallery
+        // Button to add pictures from gallery.
         Button buttonLoadImage = findViewById(R.id.gallery_button);
         buttonLoadImage.setOnClickListener(new View.OnClickListener() {
 
-            // the onClick that brings user to the gallery
+            // The onClick that brings user to the gallery.
             @Override
             public void onClick(View arg0) {
                 Intent i = new Intent(
@@ -100,7 +122,7 @@ public class InputActivity extends AppCompatActivity implements
             }
         });
 
-        // setting up autocomplete for places in the edit text
+        // Setting up autocomplete for places in the edit text.
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -108,28 +130,42 @@ public class InputActivity extends AppCompatActivity implements
                 .enableAutoManage(this, this)
                 .build();
 
-        // set the adapter to the edit text
+        // Set the adapter to the edit text.
         mPlaceAutocompleteadapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
         searchLocation = findViewById(R.id.location_text);
         searchLocation.setAdapter(mPlaceAutocompleteadapter);
     }
 
-    // the method for google api connection failed listener
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Check which item is clicked on in the actionbar.
+        if (item.toString().equals("Refresh")) {
+            InputSend();
+        }
+        else {
+            Intent intent = new Intent(InputActivity.this, MapActivity.class);
+            startActivity(intent);
+        }
+        return true;
+    }
+
+    // The method for google api connection failed listener.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-    //widgets
-    ImageView imageview;
-    Uri selectedUri;
-    ArrayList<String> images = new ArrayList<>();
-    ArrayList<String> urls = new ArrayList();
 
-    //vars
-    public int currentPage = 0;
-
-    // function that saves and shows the pictures chosen from gallery
+    // Function that saves and shows the pictures chosen from gallery.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -138,7 +174,7 @@ public class InputActivity extends AppCompatActivity implements
             selectedUri = data.getData();
             buttonOff();
 
-            // put the selected picture to the storage and add the url to array
+            // Put the selected picture to the storage and add the url to array.
             Date currentTime = Calendar.getInstance().getTime();
             ref = storageReference.child("images/" + currentTime +
                     selectedUri.getLastPathSegment());
@@ -164,133 +200,120 @@ public class InputActivity extends AppCompatActivity implements
         }
     }
 
-    // method that shows the selected images in the InputActivity
-    public void showImage(Uri selectedUri){
+    // Method that posts all the location information to the database and storage
+    public void InputSend() {
+        // Check for a location input and added images.
+        if (searchLocation.getText().toString().isEmpty()){
+            Toast.makeText(InputActivity.this, "Please enter a location",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else if (urls.isEmpty()) {
+            Toast.makeText(InputActivity.this, "Please add at least one image",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-        //set no image picture invisible
-        ImageView noImageView = findViewById(R.id.no_image);
-        noImageView.setVisibility(View.INVISIBLE);
-
-        // add new image to image slider
-        images.add(selectedUri.toString());
-        viewPager = findViewById(R.id.image_selected);
-        ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
-        viewPager.setAdapter(imageSliderAdapter);
-        buttonOn();
-
-        // setting up the indicator for the image slider
-        // ViewPagerIndicator project from Jake Wharton (github)
-        CirclePageIndicator indicator = findViewById(R.id.indicator);
-        indicator.setViewPager(viewPager);
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-            }
-            @Override
-            public void onPageScrollStateChanged(int i) {
-            }
-        });
-    }
-
-    // method that disables the buttons in the Input screen
-    public void buttonOff(){
-        Button addButton = findViewById(R.id.add_button);
-        Button galleryButton = findViewById(R.id.gallery_button);
-        addButton.setEnabled(false);
-        galleryButton.setEnabled(false);
-        galleryButton.setText("loading..");
-        galleryButton.setTextColor(grey);
-        addButton.setTextColor(grey);
-    }
-
-    // method that enables the buttons in the Input screen
-    public void buttonOn(){
-        Button addButton = findViewById(R.id.add_button);
-        Button galleryButton = findViewById(R.id.gallery_button);
-        addButton.setEnabled(true);
-        galleryButton.setEnabled(true);
-        galleryButton.setText("gallery");
-        galleryButton.setTextColor(black);
-        addButton.setTextColor(black);
-    }
-
-    // the click listener for the add button
-    private class AddClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-            // check for a location input and added images
-            if (searchLocation.getText().toString().isEmpty()){
-                Toast.makeText(InputActivity.this, "Please enter a location",
-                        Toast.LENGTH_SHORT).show();
-            }
-            else if (urls.isEmpty()) {
-                Toast.makeText(InputActivity.this, "Please add at least one image",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            // post all information and go to the main screen
-            else {
-                postAll();
-                Intent intent = new Intent(InputActivity.this, MapActivity.class);
-                startActivity(intent);
-            }
+        // Post all information and go to the main screen.
+        else if (upload) {
+            postAll();
+            Intent intent = new Intent(InputActivity.this, MapActivity.class);
+            startActivity(intent);
         }
     }
 
-    // widgets
-    String location;
-    Uri newUri;
-    String uploadUri;
-    StorageReference ref;
-    Boolean duplicate = false;
-    TextView descriptionInput;
-    LatLng coordinates;
-    ArrayList<String> allPlaceNames = new ArrayList<>();
-    ArrayList<String> oldPlaceNames;
+    // Method that shows the selected images in the InputActivity.
+    public void showImage(Uri selectedUri){
 
-    //vars
-    public int done = 0;
-    public boolean appended = false;
+        // Add no image picture to adapter.
+        if (selectedUri == noImageUri){
+            images.add(selectedUri.toString());
+            imageSliderAdapter = new ImageSliderAdapter(this, images);
+            images = new ArrayList<>();
+        }
 
-    // method that pushes all the location information to firebase database
+        // Add selected image to image slider.
+        else {
+            images.add(selectedUri.toString());
+            imageSliderAdapter = new ImageSliderAdapter(this, images);
+        }
+
+        // Set the adapter for the image slider.
+        viewPager = findViewById(R.id.image_selected);
+        viewPager.setAdapter(imageSliderAdapter);
+        buttonOn();
+
+        // Setting up the indicator for the image slider,
+        // ViewPagerIndicator project from Jake Wharton (github).
+        if (selectedUri != noImageUri){
+            CirclePageIndicator indicator = findViewById(R.id.indicator);
+            indicator.setViewPager(viewPager);
+            indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int i, float v, int i1) {
+                }
+                @Override
+                public void onPageSelected(int position) {
+                    currentPage = position;
+                }
+                @Override
+                public void onPageScrollStateChanged(int i) {
+                }
+            });
+        }
+    }
+
+    // Method that disables the buttons in the Input screen.
+    public void buttonOff(){
+        upload = false;
+        Button galleryButton = findViewById(R.id.gallery_button);
+        galleryButton.setEnabled(false);
+        galleryButton.setText("loading..");
+        galleryButton.setTextColor(grey);
+    }
+
+    // Method that enables the buttons in the Input screen.
+    public void buttonOn(){
+        upload = true;
+        Button galleryButton = findViewById(R.id.gallery_button);
+        galleryButton.setEnabled(true);
+        galleryButton.setText("gallery");
+        galleryButton.setTextColor(black);
+    }
+
+    // Method that pushes all the location information to Firebase database.
     private void postAll() {
 
-        // get new location
+        // Get new location.
         location = searchLocation.getText().toString();
 
-        // insert new location name to array with all added location names
+        // Insert new location name to array with all added location names.
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference(user);
 
-                // check if any location is added
-                // and using done variable to prevent double appends to array
+                // Check if any location is added
+                // and using done variable to prevent double appends to array.
                 if (dataSnapshot.exists() && done == 0) {
                     oldPlaceNames = (ArrayList) dataSnapshot.child("places").getValue();
                     done++;
 
-                    // add already added places to new array
+                    // Add already added places to new array.
                     for (int i = 0; i < oldPlaceNames.size(); i++) {
                         allPlaceNames.add(oldPlaceNames.get(i));
 
-                        // add new location to the new array if it does not exist in the array
+                        // Add new location to the new array if it does not exist in the array.
                         if (oldPlaceNames.get(i).equals(location)) {
                             duplicate = true;
                         }
+                        Log.v(TAG, allPlaceNames.toString());
                     }
 
-                    // if statement so array wil not be set multiple times to Firebase
+                    // If statement so array wil not be set multiple times to Firebase.
                     if (done == oldPlaceNames.size() && !appended) {
                         appended = true;
 
-                        // adding new location to the existing array
+                        // Adding new location to the existing array.
                         if (!duplicate) {
                             allPlaceNames.add(location);
                         }
@@ -299,7 +322,7 @@ public class InputActivity extends AppCompatActivity implements
                     }
                 }
 
-                // if user has not yet added any places
+                // If user has not yet added any places.
                 else if (!dataSnapshot.exists() && done == 0){
                     allPlaceNames.add(location);
                     databaseReference = databaseReference.child("places");
@@ -313,14 +336,14 @@ public class InputActivity extends AppCompatActivity implements
             }
         });
 
-        // get description
+        // Get description.
         descriptionInput = findViewById(R.id.description_text);
         String description = descriptionInput.getText().toString();
         if (description.isEmpty()) {
             description = "empty";
         }
 
-        // getting LatLng of location
+        // Getting LatLng of location.
         Geocoder geocoder = new Geocoder(InputActivity.this);
         List<Address> list;
         try {
@@ -333,7 +356,7 @@ public class InputActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        // push location, description, coordinate(LatLng) and pictures(in an array) to Firebase
+        // Push location, description, coordinate(LatLng) and pictures(in an array) to Firebase.
         databaseReference = databaseReference.child(location);
         Post post = new Post(location, urls, description, coordinates);
         databaseReference.setValue(post);

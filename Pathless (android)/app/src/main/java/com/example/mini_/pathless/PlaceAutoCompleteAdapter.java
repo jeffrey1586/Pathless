@@ -51,6 +51,7 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
 
     private static final String TAG = "PlaceAutocompleteAdapter";
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
+
     /**
      * Current results returned by this adapter.
      */
@@ -151,7 +152,6 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
                 } else {
                     results.count = 0;
                 }
-
                 return results;
             }
 
@@ -219,7 +219,6 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<AutocompletePredictio
             }
             Log.i(TAG, "Query completed. Received " + autocompletePredictions.getCount()
                     + " predictions.");
-
             return DataBufferUtils.freezeAndClose((autocompletePredictions));
         }
         Log.e(TAG, "Google API client is not connected for autocomplete query");

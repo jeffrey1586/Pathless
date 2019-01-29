@@ -21,19 +21,19 @@ import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
-    //widgets
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    String user;
+    // Widgets.
     ArrayList<String> images;
+    DatabaseReference databaseReference;
     FirebaseAuth mAuth;
+    FirebaseDatabase firebaseDatabase;
     FirebaseStorage storage;
+    String user;
     StorageReference storageReference;
     String location;
     TextView locDescription;
     ViewPager viewPager;
 
-    //vars
+    // Vars.
     public int currentPage = 0;
 
     @Override
@@ -41,11 +41,11 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // getting the clicked location
+        // Getting the clicked location.
         Intent intent = getIntent();
         location = intent.getStringExtra("location");
 
-        // setting up the Firedatabase authentication, storage and database
+        // Setting up the Firebase authentication, storage and database.
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance();
@@ -53,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
 
-        // the event listener in order to read values from the database
+        // The event listener in order to read values from the database.
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -66,7 +66,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    // getting the specific location's data from the database
+    // Getting the specific location's data from the database.
     private void showData(DataSnapshot dataSnapshot) {
         LocationInformation locInfo = new LocationInformation();
         locInfo.setLocation(dataSnapshot.child(location).getValue(
@@ -75,14 +75,14 @@ public class DetailActivity extends AppCompatActivity {
         locInfo.setDescription(dataSnapshot.child(location).getValue(
                 LocationInformation.class).getDescription());
 
-        // getting the urls and use them in the image adapter
+        // Getting the urls and use them in the image adapter.
         images = locInfo.getUrls();
         viewPager = findViewById(R.id.imageSlider);
         ImageSliderAdapter imageSliderAdapter = new ImageSliderAdapter(this, images);
         viewPager.setAdapter(imageSliderAdapter);
 
-        // setting up the indicator for the image slider
-        // ViewPagerIndicator project from Jake Wharton (github)
+        // Setting up the indicator for the image slider.
+        // ViewPagerIndicator project from Jake Wharton (github).
         CirclePageIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -99,7 +99,7 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
 
-        // Show description of the location
+        // Show description of the location.
         String description = locInfo.getDescription();
         if (description == "empty"){
             description = "";

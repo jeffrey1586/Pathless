@@ -34,7 +34,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String user;
-    ArrayList<String> PlaceNames;
+    ArrayList<String> placeNames;
     String location;
 
     // vars
@@ -46,6 +46,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -93,7 +94,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             Log.e("MapsActivity", "Can't find style. Error: ", e);
         }
 
-        // setting up the Firedatabase authentication, storage and database
+        // Setting up the Firedatabase authentication, storage and database
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -119,7 +120,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public boolean onMarkerClick(Marker m) {
                 LatLng position = m.getPosition();
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 5));
                 m.showInfoWindow();
                 return true;
             }
@@ -144,12 +145,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         // using the if loop to prevent double runs of the code
         if (done == 0){
-            PlaceNames = (ArrayList) dataSnapshot.child("places").getValue();
+            placeNames = (ArrayList) dataSnapshot.child("places").getValue();
             done++;
 
             // get location name and LatLng
-            for (int i = 0; i < PlaceNames.size(); i++) {
-                location = PlaceNames.get(i);
+            for (int i = 0; i < placeNames.size(); i++) {
+                location = placeNames.get(i);
                 MarkerInformation markInfo = new MarkerInformation();
                 markInfo.setLocation(dataSnapshot.child(location).getValue(
                         MarkerInformation.class).getLocation());

@@ -24,8 +24,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/image_selected"
         app:layout_constraintStart_toStartOf="@+id/image_selected"
-        app:layout_constraintTop_toTopOf="@+id/image_selected"
-        app:layout_constraintVertical_bias="0.49"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.64"
         app:pageColor="#ffff"
         app:snap="false" />
 
@@ -52,10 +52,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        app:layout_constraintVertical_bias="0.98" />
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/gallery_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -64,31 +64,14 @@
         android:layout_marginBottom="8dp"
         android:backgroundTint="@android:color/white"
         android:fontFamily="@font/montserrat"
-        android:text="confirm"
+        android:text="Gallery"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_text"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/gallery_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@android:color/white"
-        android:fontFamily="@font/montserrat"
-        android:text="Gallery"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/description_text"
-        app:layout_constraintEnd_toEndOf="@+id/add_button"
-        app:layout_constraintStart_toStartOf="@+id/add_button"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.73" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/image_selected"
@@ -97,13 +80,13 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/gallery_button"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_text"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <AutoCompleteTextView
         android:id="@+id/location_text"
@@ -113,33 +96,20 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#ffff"
         android:ems="10"
         android:fontFamily="@font/montserrat"
         android:hint="Enter location"
-        android:textColorHint="#ffff"
-        android:backgroundTint="#ffff"
         android:imeOptions="actionSearch"
         android:inputType="textPersonName"
         android:textColor="@android:color/white"
+        android:textColorHint="#ffff"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/no_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/image_selected"
-        app:layout_constraintStart_toStartOf="@+id/image_selected"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        app:srcCompat="@drawable/no_image" />
 
 </android.support.constraint.ConstraintLayout>
