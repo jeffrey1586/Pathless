@@ -51,6 +51,6 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
   laten zien. De gebruiker kan dan èèn van de suggesties kiezen. Dit concept is te zien in de visual sketch.</br>
   
   ### Credits
-- @JakeWharton - Delen van de 'ViewPagerIndicator' zijn geïmplementeerd om een image slider te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236).</br>
-- @Google Samples - De 'PlaceCompleteAdapter' die voor een betere implementatie zorgt voor de suggesties die gegeven worden tijdens het typen van een locatie.</br> 
+- JakeWharton - Delen van de 'ViewPagerIndicator' zijn geïmplementeerd om een image slider te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236).</br>
+- Google Samples - De 'PlaceCompleteAdapter' die voor een betere implementatie zorgt voor de suggesties die gegeven worden tijdens het typen van een locatie.</br> 
 - Patrick Chong - Design van het logo van de Pathless app.
