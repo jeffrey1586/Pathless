@@ -54,5 +54,7 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
   
 ### Credits
 - JakeWharton - Delen van de 'ViewPagerIndicator' zijn geïmplementeerd om een image slider te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236). Licensed under the Apache License, Version 2.0.</br>
+
 - Google Samples - De 'PlaceCompleteAdapter' die voor een betere implementatie zorgt voor de suggesties die gegeven worden tijdens het typen van een locatie. Licensed under the Apache License, Version 2.0.</br> 
+
 - Patrick Chong - Design van het logo van de Pathless app.
