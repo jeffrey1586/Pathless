@@ -22,6 +22,7 @@ Hiermee maken de gebruikers een visueel archief aan die laat zien welke onverget
 ![Screenschot](doc/Screenshot_1x.jpeg)
 ![Screenschot](doc/Screenshot_4phot.jpeg)
 ![Screenschot](doc/Screenshot_9det.jpeg)
+
 </br>
 
 ### Visual sketch.
