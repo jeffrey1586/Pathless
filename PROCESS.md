@@ -93,4 +93,15 @@
 
 # Day 15
 ### Veranderingen of toevoegingen in het plan:
--
+- Design aanpassingen.</br>
+
+# Day 16
+### Veranderingen of toevoegingen in het plan:
+- Aanpassing op het verkijgen van informatie uit firebase.
+- Back buttons naar de correcte activities.</br>
+
+# Day 17
+### Geïmplementeerd/toegevoegd:
+- Delete functie, waarbij zowel front- als back-end informatie van een locatie wordt verwijdert.
+- Welkom scherm voor 3 seconde.
+- Design aanpassingen in de inputActivity. Gallery button midden in het scherm en confirm button zijn rechts boven.</br>
