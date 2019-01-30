@@ -25,7 +25,7 @@ Onder elke activity is een korte beschrijving van de basale functionaliteiten.<b
 
 </br>
 
-### Benodigdheden.
+### Belangrijke functies.
 - Google maps activity (homescreen):
   De markers zijn klikbaar. De eerste klik zoomt in op de locatie, vervolgens komt de gebruiker in de detailscreen door op de location window te klikken.</br>
   
