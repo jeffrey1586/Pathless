@@ -21,7 +21,10 @@ Hiermee maken de gebruikers een visueel archief aan die laat zien welke onverget
 Hieronder zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
 Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
 
-![Screenschot](doc/VisualSketch(Pathless).png)
+![Screenschot](doc/Screenshot_1welcome.jpeg)
+![Screenschot](doc/Screenshot_1x.jpeg)
+![Screenschot](doc/Screenshot_4phot.jpeg)
+![Screenschot](doc/Screenshot_9det.jpeg)
 
 </br>
 
