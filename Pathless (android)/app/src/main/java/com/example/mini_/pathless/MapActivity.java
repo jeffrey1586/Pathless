@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     // Widgets
+    int backCount;
     FirebaseAuth mAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -95,7 +96,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
 
         // Setting up the Firedatabase authentication, storage and database
-        mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(user);
@@ -174,6 +174,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         public void onClick(View v) {
             Intent intent = new Intent(MapActivity.this, InputActivity.class);
             startActivity(intent);
+        }
+    }
+
+    // Exit the app if the on phone back button is clicked twice
+    @Override
+    public void onBackPressed() {
+        if(backCount >= 1) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else {
+            backCount++;
         }
     }
 }

@@ -117,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Delete location if bin icon is clicked
+        // Delete the location if bin icon is clicked
         if (item.toString().equals("Refresh")) {
             builder.show();
         }
