@@ -130,6 +130,12 @@ public class DetailActivity extends AppCompatActivity {
         return true;
     }
 
+
+    /**
+     * Parts of the ViewPagerIndicator project from Jake Wharton (github)
+     * are implemented for the image slider (row 155).
+     */
+
     // Getting the specific location's data from the database.
     private void showData(DataSnapshot dataSnapshot) {
         placesArray = (ArrayList) dataSnapshot.child("places").getValue();
@@ -147,7 +153,7 @@ public class DetailActivity extends AppCompatActivity {
         viewPager.setAdapter(imageSliderAdapter);
 
         // Setting up the indicator for the image slider.
-        // ViewPagerIndicator project from Jake Wharton (github).
+        // ViewPagerIndicator project from Jake Wharton (github)
         CirclePageIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

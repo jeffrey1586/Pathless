@@ -216,6 +216,11 @@ public class InputActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     *  Parts of the ViewPagerIndicator project from Jake Wharton (github)
+     *  are implemented for the image slider (row 236).
+     */
+
     // Method that shows the selected images in the InputActivity
     public void showImage(Uri selectedUri){
 
