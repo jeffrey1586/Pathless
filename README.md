@@ -23,34 +23,6 @@ Hiermee maken de gebruikers een visueel archief aan die laat zien welke onverget
 ![Screenschot](doc/Screenshot_9det.jpeg)
 
 </br>
-
-### Visual sketch
-Hieronder zijn drie activities te zien die in ieder geval in de app komen te staan.</br>
-Onder elke activity is een korte beschrijving van de basale functionaliteiten.<br>
-![Screenschot](doc/VisualSketch(Pathless).png)
-
-</br>
-
-### Belangrijke functies
-- Google maps activity (homescreen):
-  De markers zijn klikbaar. De eerste klik zoomt in op de locatie, vervolgens komt de gebruiker in de detailscreen door op de location window te klikken.</br>
-  
-- Swipable pictures:</br>
-  In 'the detailscreen' kan er op de foto's geswiped worden. Daarmee kunnen de gebruikers alle foto's bekijken.
-  De drie bolletjes onder de foto geven aan hoeveel foto's er zijn en welke de gebruiker aan het bekijken is.</br>
-
-- Add pictures (pop up):</br>
-  In 'the inputscreen' is het mogelijk om foto's toe te voegen die uit de galerij van de gebruiker komt.</br>
-  Als er een foto gekozen wordt dit samen met de loactie gegevens en tekst opgeslagen in een database.</br>
-
-- Firebase Database:</br>
-  In de Pathless app wordt er gebruik gemaakt van de realtime database en de storage van Firebase.</br>
-
-- Add location:</br>
-  De gebruiker kan een locatie typen en ondertussen worden er suggesties
-  laten zien. De gebruiker kan dan èèn van de suggesties kiezen. Dit concept is te zien in de visual sketch.
-  
-  </br>
   
 ### Credits
 - JakeWharton - Delen van de 'ViewPagerIndicator' zijn geïmplementeerd om een image slider te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236). Licensed under the Apache License, Version 2.0.</br>
