@@ -157,7 +157,8 @@ public class InputActivity extends AppCompatActivity implements
     // The method for google api connection failed listener
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(this, "connection with Google maps failed", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "connection with Google maps failed",
+                Toast.LENGTH_SHORT).show();
     }
 
 
@@ -327,7 +328,7 @@ public class InputActivity extends AppCompatActivity implements
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(InputActivity.this, "a database error occured",
-                        Toast.LENGTH_SHORT);
+                        Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -197,12 +197,11 @@ public class DetailActivity extends AppCompatActivity {
         databaseReference.setValue(newPlaces).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                // delete the location data from the database
+                FirebaseDatabase.getInstance().getReference(user).child(location).removeValue();
                 Intent intent = new Intent(DetailActivity.this, MapActivity.class);
                 startActivity(intent);
             }
         });
-
-        // delete the location data from the database
-        FirebaseDatabase.getInstance().getReference(user).child(location).removeValue();
     }
 }
