@@ -25,8 +25,10 @@ Hiermee maken de gebruikers een visueel archief aan die laat zien welke onverget
 </br>
   
 ### Credits
-- JakeWharton - Delen van de 'ViewPagerIndicator' zijn geïmplementeerd om een image slider te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236). Licensed under the Apache License, Version 2.0.</br>
+- JakeWharton - Een deel van de 'ViewPagerIndicator' is geïmplementeerd om een image indicator te maken in de 'DetailActivity' (regel 155) en de 'InputActivity' (regel 236). Dit is weergegeven als bolletjes onder de foto. Licensed under the Apache License, Version 2.0.</br>
 
-- Google Samples - De 'PlaceCompleteAdapter' die voor een betere implementatie zorgt voor de suggesties die gegeven worden tijdens het typen van een locatie. Licensed under the Apache License, Version 2.0.</br> 
+- Google Samples - De 'PlaceCompleteAdapter' die voor een betere implementatie zorgt voor de suggesties die gegeven worden tijdens het typen van een locatie. Licensed under the Apache License, Version 2.0.</br>
+
+- Sanktips (Youtube channel) - De basis van de ImageSliderAdapter is afkomstig van het Youtube kanaal Sanktips die tutorial videos maken. Het gedeelte waar Glide gebruikt wordt is eigen implementatie.
 
 - Patrick Chong - Design van het logo van de Pathless app.
