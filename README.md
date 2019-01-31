@@ -14,9 +14,8 @@ Vervolgens kunnen zij foto's en een aantal regels tekst bijvoegen die voor hun e
 of simpelweg laat zien hoe mooi die plek is.</br>
 Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.</br>
 
-### Link naar de product demo van de app:
+##### Link naar de product demo van de app: 
 [https://vimeo.com/314547496](https://vimeo.com/314547496)
-
 
 </br>
 
