@@ -12,7 +12,11 @@ het ontmoeten van de lokale bevolking en het leren van nieuwe culturen wordt bij
 In de Pathless app kunnen reizigers tijdens of na de reis hun favorieten locaties toevoegen aan de Pathless map.</br>
 Vervolgens kunnen zij foto's en een aantal regels tekst bijvoegen die voor hun een verhaal verteld over die plek</br>
 of simpelweg laat zien hoe mooi die plek is.</br>
-Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.
+Hiermee maken de gebruikers een visueel archief aan die laat zien welke onvergetelijke plekken zij gezien hebben.</br>
+
+Link naar de product demo:
+[a link](https://vimeo.com/314547496)
+
 
 </br>
 
