@@ -34,6 +34,6 @@ In de InputActivity werd het duidelijk dat het enige tijd duurde voordat de foto
 </br>
 
 # Reden voor Firebase (verdediging van deze keuze)
-De reden waarom ik voor Firebase gekozen heb bestaat uit twee delen.
+De reden waarom ik voor Firebase gekozen heb bestaat uit twee delen.</br>
 Ten eerste hebben wij tijdens het vak app studio (android) een keer gewerkt met SQL in de app 'Journal'. Ik kon daardoor logischerwijs kiezen om dit weer te gebruiken, ook omdat de Pathless app als basis veel overeenkomsten heeft met de Journal app. Maar voor het eindproject wilde ik juist nog iets nieuws leren, zodat ik niet alleen maar functies aan het herproduceren was. Firebase was daarom een goede uitdaging om het in de Pathless app te implementeren.</br>
 Ten tweede wilde ik vanaf het begin al de optie openhouden om een mogelijke vrienden systeem te hebben voor de app. Door alle data online op te slaan was en is dit nog steeds mogelijk om uit te voeren.</br>
